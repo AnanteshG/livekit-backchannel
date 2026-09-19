@@ -36,6 +36,8 @@ def test_pairs_exclude_warmups_failures_and_missing_partners():
     assert s['complete_pairs'] == 1
     assert s['paired_mean_delta_ms'] == 20
     assert s['modes']['enabled']['failures'] == 1
+    assert s['paired_mean_ci95_ms'] == [None, None]
+    assert s['regression_flag'] is False
 
 
 def test_mismatched_audio_cannot_be_paired():

@@ -36,6 +36,7 @@ async def replay(spec, enabled, pair_id, warmup=False):
     room = rtc.Room()
     lk = api.LiveKitAPI()
     ready = asyncio.Event()
+    clock_ready = asyncio.Event()
     response = asyncio.Event()
     pongs = []
     raw_events, received, tasks = [], [], set()
@@ -60,6 +61,7 @@ async def replay(spec, enabled, pair_id, warmup=False):
             t2 = perf_counter()
             pongs.append((t2 - event['t0'],
                           event['server_time'] - (event['t0'] + t2) / 2))
+            clock_ready.set()
         else:
             raw_events.append({**event, 'absolute': payload['origin'] + event['t']})
             if event['kind'] == 'bc_decision':
@@ -123,8 +125,10 @@ async def replay(spec, enabled, pair_id, warmup=False):
             await room.local_participant.publish_data(
                 json.dumps({'t0': perf_counter()}).encode(), reliable=True, topic='lab.ping')
             await asyncio.sleep(.15)
-        if not pongs:
-            raise RuntimeError('No clock alignment samples')
+        try:
+            await asyncio.wait_for(clock_ready.wait(), timeout=5)
+        except TimeoutError as exc:
+            raise RuntimeError('No clock alignment samples within five seconds') from exc
         source = rtc.AudioSource(16000, 1, queue_size_ms=20)
         track = rtc.LocalAudioTrack.create_audio_track('replay-microphone', source)
         await room.local_participant.publish_track(track, rtc.TrackPublishOptions(

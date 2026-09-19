@@ -103,12 +103,17 @@ def summarize(runs):
             by_scenario.setdefault(a['scenario'], []).append(delta)
     rng = random.Random(41)
     # Stratify by scenario so resampling doesn't change the scenario mix.
+    # A singleton stratum cannot estimate within-scenario variation.
+    uncertainty_available = bool(by_scenario) and all(len(v) >= 2 for v in by_scenario.values())
     boot = [statistics.mean([rng.choice(v) for v in by_scenario.values()
-                             for _ in range(len(v))]) for _ in range(2000)] if deltas else []
+                             for _ in range(len(v))]) for _ in range(2000)] if uncertainty_available else []
     return {'modes': by_mode, 'complete_pairs': len(deltas),
             'paired_mean_delta_ms': statistics.mean(deltas) if deltas else None,
             'paired_mean_ci95_ms': [percentile(boot, .025), percentile(boot, .975)],
             'per_scenario_delta_ms': {k: statistics.mean(v) for k, v in by_scenario.items()},
             'regression_threshold_ms': 30,
             'regression_flag': bool(boot and percentile(boot, .025) > 30),
-            'interpretation': 'Descriptive results; small samples cannot establish equivalence.'}
+            'interpretation': ('Descriptive results; small samples cannot establish equivalence.'
+                               if uncertainty_available else
+                               'Confidence interval unavailable: each represented scenario needs '
+                               'at least two complete pairs. Small samples cannot establish equivalence.')}
