@@ -156,7 +156,7 @@ A potentially bad backchannel is one that starts in the final **400ms** of the u
 
 The included **simulation** has 40 complete pairs (80 runs), response P50 **898.8ms**, P95 **926.2ms** in both modes, and backchannel P50 **120ms**. There are **65** audible simulated acknowledgements, **10** cancellations and **5** near-EOT collisions. The collisions occur in the mid-sentence-pause scenario's final segment and expose the limits of duration/heuristic gating. Zero simulated response delta is imposed by the shared provider schedule; it does not measure CPU contention or provider variance. See `results/analysis.md`.
 
-The real replay contains **15 complete pairs**. Baseline/enabled response P50 is **4,579.3/4,328.6 ms**; P95 is **5,859.8/6,555.1 ms**. The paired mean difference is **+255.3 ms**, with a 95% bootstrap interval **[unavailable, unavailable] ms**. These are small-sample measurements on a shared development laptop, not proof of causation or equivalence. See `results/analysis.md` for stage metrics, collisions, retained failures and the setup-failure retry. Naturalness still needs blinded human listening evaluations.
+The real replay contains **15 complete pairs**. Baseline/enabled response P50 is **4,579.3/4,328.6 ms**; P95 is **5,859.8/6,555.1 ms**. The paired mean difference is **+255.3 ms**. The confidence interval is withheld because the pause scenario has only one complete pair. These are small-sample measurements on a shared development laptop, not proof of causation or equivalence. See `results/analysis.md` for stage metrics, collisions, retained failures and the setup-failure retry. Naturalness still needs blinded human listening evaluations.
 
 ## Reference-project design review
 

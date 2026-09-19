@@ -18,15 +18,15 @@ There are **36 recorded attempts**, including two excluded warmup runs and a doc
 | EOT P50 | 791.9 ms | 809.9 ms |
 | STT finalization P50 | 678.0 ms | 686.2 ms |
 | Acknowledgements | 0.0 | 28.0 |
-| Acknowledgement decision-to-received PCM P50 | unavailable ms | 183.6 ms |
-| Acknowledgement decision-to-received PCM P95 | unavailable ms | 235.3 ms |
+| Acknowledgement decision-to-received PCM P50 | unavailable | 183.6 ms |
+| Acknowledgement decision-to-received PCM P95 | unavailable | 235.3 ms |
 | Near-EOT collisions | 0.0 | 5.0 |
 | Cancellations | 0.0 | 14.0 |
 | Response overlap | 0.0 ms | 0.0 ms |
 | Premature responses | 0.0 | 0.0 |
 | Failed runs, excluding warmups | 1.0 | 2.0 |
 
-The paired mean response difference (enabled minus baseline) is **+255.3 ms**, with a stratified bootstrap 95% interval **[unavailable, unavailable] ms**. Regression flag (lower bound greater than 30 ms): **False**. Confidence interval unavailable: each represented scenario needs at least two complete pairs. Small samples cannot establish equivalence. Two pairs per scenario give particularly weak tail estimates. A P95 here is an interpolated descriptive statistic, not a production SLA.
+The paired mean response difference (enabled minus baseline) is **+255.3 ms**. The confidence interval is withheld because the pause scenario has only one complete pair. Regression flag (lower bound greater than 30 ms): **False**. Confidence interval unavailable: each represented scenario needs at least two complete pairs. Small samples cannot establish equivalence. Two pairs per scenario give particularly weak tail estimates. A P95 here is an interpolated descriptive statistic, not a production SLA.
 
 ### What became slower?
 
@@ -59,8 +59,8 @@ This experiment does not establish that acknowledgements cause or avoid a slowdo
 Both arms of the retry pair timed out waiting for worker readiness. The local worker was absent when inspected and was restarted afterward. These failures remain excluded; no additional retries were performed. The pause scenario consequently has only one complete pair, so its within-scenario uncertainty cannot be estimated and the overall confidence interval is withheld. A false regression flag here means insufficient evidence, not evidence of no regression.
 
 - `mid_sentence_pause-1`, enabled: RuntimeError: No clock alignment samples
-- `mid_sentence_pause-2`, enabled: TimeoutError: 
-- `mid_sentence_pause-2`, baseline: TimeoutError: 
+- `mid_sentence_pause-2`, enabled: TimeoutError (worker readiness).
+- `mid_sentence_pause-2`, baseline: TimeoutError (worker readiness).
 
 Raw evidence: `livekit.json`, including every event, failure, audio hash, timing uncertainty, model configuration and collection provenance. Select **LiveKit audio replay** in the dashboard. The original batch used worker commit `7601d7e`; the retry and corrected uncertainty summary use `41999b3`.
 
