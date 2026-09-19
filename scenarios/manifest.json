@@ -1,0 +1,178 @@
+[
+  {
+    "id": "short_answer",
+    "label": "Short answer",
+    "rate": 0,
+    "parts": [
+      "Yes, Tuesday works for me."
+    ],
+    "pause_ms": 0,
+    "file": "audio/short_answer.wav",
+    "sha256": "8d173076b32a973648dfefe4b53eaf2f9247d1291e9763d2013475f7439e2791",
+    "speech_end": 2.195,
+    "duration": 3.195,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 2.195,
+        "text": "Yes, Tuesday works for me."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "long_monologue",
+    "label": "Long monologue",
+    "rate": 0,
+    "parts": [
+      "I want to describe how our team improved the checkout service. We started by reviewing slow requests and found that the database was doing the same work many times. We added a small cache and measured the results carefully. Then we tested the changes with a gradual rollout and watched the error rate before enabling it for everyone."
+    ],
+    "pause_ms": 0,
+    "file": "audio/long_monologue.wav",
+    "sha256": "7a68ebf9808fabdb3a23036fc8278b1ebc88198c377f56bc3586759263dd7575",
+    "speech_end": 19.7791875,
+    "duration": 20.7791875,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 19.7791875,
+        "text": "I want to describe how our team improved the checkout service. We started by reviewing slow requests and found that the database was doing the same work many times. We added a small cache and measured the results carefully. Then we tested the changes with a gradual rollout and watched the error rate before enabling it for everyone."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "approaching_eot",
+    "label": "Approaching end of turn",
+    "rate": 0,
+    "parts": [
+      "I reviewed the logs and checked the deployment. The problem was a missing index. That is everything I wanted to explain. What would you recommend?"
+    ],
+    "pause_ms": 0,
+    "file": "audio/approaching_eot.wav",
+    "sha256": "82d6879086781c60d1ac653b70e5bd736a63b2d1a5032873167d87f9adcf02f8",
+    "speech_end": 10.008875,
+    "duration": 11.008875,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 10.008875,
+        "text": "I reviewed the logs and checked the deployment. The problem was a missing index. That is everything I wanted to explain. What would you recommend?"
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "mid_sentence_pause",
+    "label": "Pause inside a sentence",
+    "rate": 0,
+    "parts": [
+      "The most important part of our migration was making sure that",
+      "every customer could continue using the old version until the new version was ready. We kept both systems running while checking the results."
+    ],
+    "pause_ms": 380,
+    "file": "audio/mid_sentence_pause.wav",
+    "sha256": "c47a8ec427ac2dab1a9915653d405eb68e531628d91d6431394e0c6f86252b7a",
+    "speech_end": 11.991375,
+    "duration": 12.991375,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 3.4628125,
+        "text": "The most important part of our migration was making sure that"
+      },
+      {
+        "start": 3.8428125,
+        "end": 11.991375,
+        "text": "every customer could continue using the old version until the new version was ready. We kept both systems running while checking the results."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "fast_speaker",
+    "label": "Fast speaker",
+    "rate": 4,
+    "parts": [
+      "We checked the queue, inspected the logs, restarted the worker, verified the messages, and then wrote a test so that the same issue would be detected before the next release. The whole investigation took less than an hour because every stage had useful metrics."
+    ],
+    "pause_ms": 0,
+    "file": "audio/fast_speaker.wav",
+    "sha256": "00ee76b4dc6087384d8fb7528164e4fa10aebee9199a09bb279fc74bcd5e6771",
+    "speech_end": 10.0576875,
+    "duration": 11.0576875,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 10.0576875,
+        "text": "We checked the queue, inspected the logs, restarted the worker, verified the messages, and then wrote a test so that the same issue would be detected before the next release. The whole investigation took less than an hour because every stage had useful metrics."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "noisy_audio",
+    "label": "Speech with seeded background noise",
+    "rate": 0,
+    "noise": 0.025,
+    "parts": [
+      "I am calling from a busy place and want to explain the issue. The application works on my computer but sometimes fails on the server. I noticed that it happens when several people upload large files at the same time."
+    ],
+    "pause_ms": 0,
+    "file": "audio/noisy_audio.wav",
+    "sha256": "00df1413e9ae8e16afcf3a83549a04a99f1c915ccee044ee1d9988aad7cff0e0",
+    "speech_end": 13.2539375,
+    "duration": 14.2539375,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 13.2539375,
+        "text": "I am calling from a busy place and want to explain the issue. The application works on my computer but sometimes fails on the server. I noticed that it happens when several people upload large files at the same time."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "multiple_backchannels",
+    "label": "Long turn with multiple opportunities",
+    "rate": 0,
+    "parts": [
+      "Let me walk through the design in more detail. First the client uploads a document and receives a tracking number. The service stores the file and puts a message on a queue. A worker picks up the message and extracts the text. If processing fails, it retries with a delay. We keep track of every attempt so that support can explain what happened. Once processing completes, the worker updates the database and sends a notification. We also measure the time spent at each step and alert the team when the queue gets too large. Finally we clean up old temporary files after checking that the results were saved successfully."
+    ],
+    "pause_ms": 0,
+    "file": "audio/multiple_backchannels.wav",
+    "sha256": "aed55eb3cef5a38b62b4585a40f0071e3e8936acf0b890ac415b4082f3a335c3",
+    "speech_end": 40.4625,
+    "duration": 41.4625,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 40.4625,
+        "text": "Let me walk through the design in more detail. First the client uploads a document and receives a tracking number. The service stores the file and puts a message on a queue. A worker picks up the message and extracts the text. If processing fails, it retries with a delay. We keep track of every attempt so that support can explain what happened. Once processing completes, the worker updates the database and sends a notification. We also measure the time spent at each step and alert the team when the queue gets too large. Finally we clean up old temporary files after checking that the results were saved successfully."
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  },
+  {
+    "id": "stop_at_decision",
+    "label": "Abrupt stop near eligibility boundary",
+    "rate": 0,
+    "truncate_seconds": 2.66,
+    "parts": [
+      "I want to explain how we handled the migration while keeping the old system running and checking every request"
+    ],
+    "pause_ms": 0,
+    "file": "audio/stop_at_decision.wav",
+    "sha256": "be2ef96089bbdf5749da8901cd3d3c64012586802654168ab1132bcd5d0b1a2e",
+    "speech_end": 2.66,
+    "duration": 3.66,
+    "segments": [
+      {
+        "start": 0.2,
+        "end": 2.66,
+        "text": "I want to explain how we handled"
+      }
+    ],
+    "annotation": "synthetic clip boundary, ~10ms trailing margin"
+  }
+]
