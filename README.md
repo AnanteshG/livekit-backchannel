@@ -2,7 +2,7 @@
 
 An independent, cancellable listening-acknowledgement engine on **LiveKit Agents**, built for the Blue Machines SDE-1 assignment. Python owns the engine, voice worker, replay runner, metrics and web server. A small vanilla JavaScript dashboard compares paired runs and connects a microphone to LiveKit.
 
-**Current evidence:** real prerecorded audio has passed through LiveKit Cloud, Deepgram STT, OpenAI LLM and OpenAI TTS. The receiver observed both normal responses and independent acknowledgements. The local dashboard, 31 automated tests, eight WAV fixtures and 40 simulated pairs also work. See `results/analysis.md` for the paired measurements and limitations. No public live deployment is claimed; the web server and worker run locally.
+**Current evidence:** real prerecorded audio has passed through LiveKit Cloud, Deepgram STT, OpenAI LLM and OpenAI TTS. The receiver observed both normal responses and independent acknowledgements. The local dashboard, 32 automated tests, eight WAV fixtures and 40 simulated pairs also work. See `results/analysis.md` for the paired measurements and limitations. No public live deployment is claimed; the web server and worker run locally.
 
 ## Quick start
 
@@ -185,3 +185,5 @@ Before public production use: implement user authentication, shared rate limitin
 - [Voice agent quickstart](https://docs.livekit.io/agents/start/voice-ai/)
 
 Pinned Python SDK: LiveKit Agents 1.8.2. Vendored browser SDK version and SHA256 are in `web/vendor/VERSION.txt`, with its upstream license.
+
+The dashboard opens on **Approach**, explaining architecture, policy choices, cancellation races, benchmark fairness and limitations before linking to Experiment and Live conversation. Its evidence summary reads the selected result file instead of duplicating numbers.

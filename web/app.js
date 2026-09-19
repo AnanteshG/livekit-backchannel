@@ -1,149 +1,57 @@
 const $ = id => document.getElementById(id);
 const fmt = (n, unit = ' ms') => n == null ? '—' : `${n.toFixed(1)}${unit}`;
-let report, specs = [], selected = 'long_monologue', repetition = '0', room, readyTimer;
+let room, readyTimer;
 function element(tag, text, cls) {
   const node = document.createElement(tag);
   if (text != null) node.textContent = text;
   if (cls) node.className = cls;
   return node;
 }
-function tab(live) {
-  $('experiment').hidden = live; $('live').hidden = !live;
-  $('experimentTab').classList.toggle('active', !live);
-  $('liveTab').classList.toggle('active', live);
-}
-$('experimentTab').onclick = () => tab(false);
-$('liveTab').onclick = () => tab(true);
-async function load() {
-  const kind = $('source').value;
-  $('download').href = `/api/results/${kind}`;
-  try {
-    const response = await fetch(`/api/results/${kind}`);
-    if (!response.ok) throw new Error('No LiveKit measurements yet. Configure credentials, start the worker, then run the audio replay benchmark.');
-    report = await response.json();
-    $('notice').textContent = kind === 'simulation'
-      ? 'SIMULATED DATA · Real engine, scripted speech signals and virtual provider delays. These numbers test policy behaviour; they do not demonstrate real LiveKit latency or a performance improvement.'
-      : 'LIVE AUDIO REPLAY · Response latency uses PCM received by the replay client. Backchannel latency includes clock-alignment uncertainty. Hardware speaker latency is not measured.' + (report.configuration_note ? ` ${report.configuration_note}` : '');
-    renderSummary(); renderScenarios(); renderPair();
-  } catch (error) {
-    report = null;
-    $('notice').textContent = error.message;
-    for (const id of ['stats','metrics','timelines','events','scenarioList']) $(id).replaceChildren();
-    $('pairCount').textContent = 'No measurements'; $('confidence').textContent = '';
-    $('scenarioTitle').textContent = 'Awaiting audio replay'; $('duration').textContent = '';
-    $('audio').removeAttribute('src'); $('repetition').replaceChildren();
+function showSection(selectedSection) {
+  for (const name of ['approach', 'live']) {
+    $(name).hidden = name !== selectedSection;
+    $(`${name}Tab`).classList.toggle('active', name === selectedSection);
+    $(`${name}Tab`).setAttribute('aria-pressed', String(name === selectedSection));
   }
 }
-function renderSummary() {
-  const s = report.summary, a = s.modes.baseline, b = s.modes.enabled;
-  const cards = [
-    ['Response P50', fmt(b.response_p50_ms), `Baseline ${fmt(a.response_p50_ms)}`],
-    ['Response P95', fmt(b.response_p95_ms), `${b.valid} valid enabled runs`],
-    ['Backchannel P50', fmt(b.bc_p50_ms), 'Decision → received audio'],
-    ['Near-end collisions', String(b.eot_collisions), `${b.cancelled} cancelled acknowledgements`]
-  ];
-  $('stats').replaceChildren(...cards.map(([label,value,note]) => {
-    const card = element('div', null, 'stat');
-    card.append(element('div', label, 'stat-label'), element('div', value, 'stat-value'), element('div', note, 'stat-note'));
-    return card;
-  }));
-  const metrics = [
-    ['Response P50', 'response_p50_ms', true], ['Response P95', 'response_p95_ms', true],
-    ['LLM first token · P50', 'llm_ttft_ms', true], ['TTS first audio · P50', 'tts_first_ms', true],
-    ['End-of-turn detection · P50', 'eot_ms', true], ['STT finalization · P50', 'stt_final_ms', true],
-    ['Backchannels', 'backchannels', false], ['Near-end collisions', 'eot_collisions', false],
-    ['Cancelled backchannels', 'cancelled', false], ['Overlap with user · total', 'user_overlap_ms', true],
-    ['Overlap with response · total', 'response_overlap_ms', true], ['Premature responses', 'premature_response', false],
-    ['Failed / incomplete runs', 'failures', false]
-  ];
-  $('metrics').replaceChildren(...metrics.map(([label,key,ms]) => {
-    const row = element('tr');
-    const delta = a[key] == null || b[key] == null ? null : b[key] - a[key];
-    for (const text of [label, ms ? fmt(a[key]) : String(a[key]), ms ? fmt(b[key]) : String(b[key]),
-      delta == null ? '—' : `${delta > 0 ? '+' : ''}${ms ? fmt(delta) : delta}`]) row.append(element('td', text));
-    return row;
-  }));
-  $('pairCount').textContent = `${s.complete_pairs} complete pairs`;
-  const ci = s.paired_mean_ci95_ms;
-  $('confidence').textContent = `Paired mean difference ${fmt(s.paired_mean_delta_ms)} · Stratified bootstrap 95% interval [${fmt(ci[0])}, ${fmt(ci[1])}]. ${report.measurement_kind === 'simulation' ? 'Zero delta is built into the virtual provider schedule, not evidence of real-world equivalence.' : s.interpretation} ${s.regression_flag ? 'Regression flag: lower confidence bound exceeds 30 ms.' : ''}`;
+for (const name of ['approach', 'live']) {
+  $(`${name}Tab`).onclick = () => showSection(name);
 }
-function renderScenarios() {
-  $('scenarioList').replaceChildren(...specs.map((spec, i) => {
-    const button = element('button', null, `scenario ${selected === spec.id ? 'selected' : ''}`);
-    button.append(element('span', String(i+1).padStart(2,'0'), 'num'), element('span', spec.label));
-    button.onclick = () => { selected = spec.id; renderScenarios(); renderPair(); };
-    return button;
-  }));
-  const values = [...new Set(report.runs.filter(r => r.scenario === selected && !r.warmup).map(r => r.pair_id.split('-').at(-1)))];
-  if (!values.includes(repetition)) repetition = values[0];
-  $('repetition').replaceChildren(...values.map(v => {
-    const o = element('option', `Pair ${Number(v) + 1}`); o.value = v; return o;
-  }));
-  $('repetition').value = repetition;
-}
-function renderPair() {
-  if (!report) return;
-  const spec = specs.find(s => s.id === selected);
-  const pair = report.runs.filter(r => r.pair_id === `${selected}-${repetition}` && !r.warmup)
-    .sort((a,b) => a.mode.localeCompare(b.mode));
-  $('scenarioTitle').textContent = spec.label;
-  $('duration').textContent = `${spec.speech_end.toFixed(1)}s user turn`;
-  if (!$('audio').src.endsWith(spec.file.split('/').at(-1))) $('audio').src = `/audio/${spec.file.split('/').at(-1)}`;
-  const max = Math.max(spec.duration, ...pair.flatMap(r => r.events.map(e => e.t)), 1) + .4;
-  $('timelines').replaceChildren(...pair.map(run => timeline(run, spec, max)));
-  $('events').replaceChildren(...pair.flatMap(run => run.events.map(event => {
-    const row = element('tr');
-    const { t, kind, ...data } = event;
-    for (const text of [run.mode, `${t.toFixed(3)}s`, kind, JSON.stringify(data)]) row.append(element('td', text));
-    return row;
-  })));
-}
-function timeline(run, spec, max) {
-  const wrap = element('div', null, 'timeline-wrap');
-  const title = element('div', null, 'timeline-title');
-  title.append(element('span', run.mode === 'baseline' ? 'A / Baseline' : 'B / Backchannel enabled'),
-    element('span', run.status === 'ok' ? `Response ${fmt(run.metrics.response_ms)} · ${run.metrics.backchannels} acknowledgements` : `FAILED: ${run.error || 'incomplete measurement'}`, 'timeline-sub'));
-  wrap.append(title);
-  const pos = time => `${Math.max(0,Math.min(100,time / max * 100))}%`;
-  for (const name of ['User','STT','EOT risk','Backchannel','Response']) {
-    const row = element('div', null, 'track-row'); row.append(element('span', name, 'lane-label'));
-    const lane = element('div', null, 'lane'); row.append(lane);
-    const end = element('span', null, 'endline'); end.style.left = pos(spec.speech_end); lane.append(end);
-    const bar = (start, finish, cls, hint) => {
-      const b = element('span', null, `bar ${cls}`); b.style.left = pos(start);
-      b.style.width = `${Math.max(.35, (finish-start)/max*100)}%`; b.title = hint; lane.append(b);
-    };
-    const marker = (event, symbol) => {
-      const m = element('span', symbol, 'marker'); m.style.left = pos(event.t);
-      m.title = `${event.t.toFixed(3)}s ${event.kind} ${event.text || (event.value ?? '')}`; lane.append(m);
-    };
-    if (name === 'User') for (const s of spec.segments) bar(s.start,s.end,'',s.text);
-    if (name === 'STT') for (const e of run.events.filter(e=>e.kind.startsWith('stt_'))) marker(e,e.kind==='stt_final'?'●':'·');
-    if (name === 'EOT risk') {
-      let previous = null;
-      const effective = new Map(run.events.filter(e=>e.kind==='eot_risk').map(e=>[e.t,e]));
-      for (const e of effective.values()) {
-        if (!previous || e.value !== previous.value) {
-          marker(e,previous && e.t-previous.t < max/8 ? '·' : e.value.toFixed(2)); previous=e;
-        }
-      }
-    }
-    if (name === 'Backchannel') {
-      for (const e of run.events.filter(e=>e.kind==='bc_decision')) marker(e,'▲');
-      for (const e of run.events.filter(e=>e.kind==='bc_audio_received')) {
-        const finish=run.events.find(x=>x.kind==='bc_audio_received_end'&&x.decision===e.decision&&x.t>=e.t);
-        bar(e.t, finish ? finish.t : e.t+.06,'bc',`Received acknowledgement at ${e.t.toFixed(3)}s`);
-      }
-    }
-    if (name === 'Response') for (const e of run.events.filter(e=>e.kind==='response_audio_received')) marker(e,'●');
-    wrap.append(row);
+document.querySelectorAll('[data-view]').forEach(link => {
+  link.onclick = event => {
+    event.preventDefault();
+    showSection(link.dataset.view);
+    document.querySelector('nav').scrollIntoView({block:'start'});
+  };
+});
+showSection('approach');
+const races = {
+  pending: {
+    steps: ['The policy selects an acknowledgement and starts one preparation task.',
+      'The user stops. Cancellation advances the generation counter and cancels that task.',
+      'Even if the provider ignores cancellation and returns audio later, the generation check rejects it.'],
+    outcome: 'Expected invariant: stale prepared audio never reaches the outgoing queue.'
+  },
+  playing: {
+    steps: ['Acknowledgement PCM is already being submitted on its separate audio track.',
+      'The agent begins a normal answer. Its busy state cancels the acknowledgement and clears the local queue.',
+      'The response proceeds independently. PCM already transmitted or buffered at the receiver cannot be recalled.'],
+    outcome: 'Expected invariant: no new acknowledgement is queued behind the answer; already-delivered audio remains a limitation.'
+  },
+  slow: {
+    steps: ['A provider takes too long or raises an error while preparing an acknowledgement.',
+      'Preparation has a 650 ms timeout. Failure ends the attempt and clears the audio sink.',
+      'The 4.5 second attempt cooldown prevents a rapid retry loop. The normal response path does not wait.'],
+    outcome: 'Expected invariant: one pending task at most, with bounded preparation and retry frequency.'
   }
-  const ticks = element('div', null, 'ticks');
-  for(let i=0;i<=5;i++) ticks.append(element('span', `${(max*i/5).toFixed(1)}s`));
-  wrap.append(ticks); return wrap;
+};
+function renderRace() {
+  const race = races[$('raceCase').value];
+  $('raceSteps').replaceChildren(...race.steps.map(step => element('li', step)));
+  $('raceOutcome').textContent = race.outcome;
 }
-$('source').onchange = load;
-$('repetition').onchange = () => { repetition = $('repetition').value; renderPair(); };
+$('raceCase').onchange = renderRace;
+renderRace();
 function log(text) {
   const item = element('li'); item.append(element('time', new Date().toLocaleTimeString()), element('span', text));
   $('liveEvents').prepend(item);
@@ -196,8 +104,8 @@ $('connect').onclick = async () => {
 $('disconnect').onclick=async()=>{if(room)await room.disconnect();room=null;resetLive('Conversation ended');};
 $('enabled').onchange=async()=>{if(room)try{await room.localParticipant.publishData(new TextEncoder().encode(JSON.stringify({enabled:$('enabled').checked})),{reliable:true,topic:'lab.control'});log(`Backchannels ${$('enabled').checked?'enabled':'disabled'}`);}catch(e){log(`Mode change failed: ${e.message}`);}};
 $('clearEvents').onclick=()=>$('liveEvents').replaceChildren();
-Promise.all([fetch('/api/scenarios').then(r=>r.json()),fetch('/api/status').then(r=>r.json())]).then(([s,status])=>{
-  specs=s;
-  $('availability').textContent=status.configured?'Credentials configured. The agent worker must also be running.':`Live mode needs: ${status.missing.join(', ')}. See the README for setup.`;
-  load();
-}).catch(e=>{$('notice').textContent=`Could not load the experiment: ${e.message}`;});
+fetch('/api/status').then(r => r.json()).then(status => {
+  $('availability').textContent = status.configured ? 'Credentials configured. The agent worker must also be running.' : `Live mode needs: ${status.missing.join(', ')}. See the README for setup.`;
+}).catch(e => {
+  $('availability').textContent = `Live mode status unavailable: ${e.message}`;
+});

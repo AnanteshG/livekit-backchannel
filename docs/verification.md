@@ -2,7 +2,7 @@
 
 Local Windows / Python 3.12 verification:
 
-- 31 automated tests passed, including public LiveKit adapter hooks, RTC frame forwarding and correlated timing across retried requests.
+- 32 automated tests passed, including public LiveKit adapter hooks, RTC frame forwarding and correlated timing across retried requests.
 - Ruff checks passed for Python source, tests and scripts.
 - Python compilation and JavaScript syntax checks passed.
 - Installed dependency compatibility check passed (`pip check`).
@@ -25,3 +25,5 @@ Not verified:
 - Container build/run. Docker CLI is installed but the Docker Desktop Linux engine pipe was unavailable. Docker/Compose files are provided as deployment configuration, not a tested deployment.
 
 Two dependency deprecation warnings were emitted by the FastAPI/Starlette test client; they did not fail the tests. These are not cloud integration tests and do not establish speech naturalness or production latency.
+
+The evaluator-facing Approach page was checked against the assignment: architecture, design trade-offs, race walkthroughs, measurement boundaries, evidence limits and all required behavioural test categories. A new test reproduced a provider swallowing timeout cancellation and returning late audio; an explicit expiration check now rejects it.

@@ -181,3 +181,22 @@ async def test_non_cooperative_provider_cannot_play_after_cancel():
     await settle()
     assert s.plays == 0
     await e.aclose()
+
+
+async def test_provider_cannot_swallow_timeout_and_play_late_audio():
+    async def provider():
+        try:
+            await asyncio.sleep(10)
+        except asyncio.CancelledError:
+            return b'late audio'
+    e, c, s, timeline = setup(
+        provider=provider, policy=replace(Policy(), prepare_timeout=0.01))
+    eligible(e, c)
+    await asyncio.sleep(0.04)
+    try:
+        assert s.plays == 0
+        assert e.task is None
+        assert any(event['kind'] == 'bc_failed' and event['error'] == 'TimeoutError'
+                   for event in timeline.events)
+    finally:
+        await e.aclose()

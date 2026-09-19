@@ -143,8 +143,12 @@ class BackchannelEngine:
                 self.timeline.emit('bc_audio_submitted', decision=decision, turn=self.turn)
 
         try:
-            async with asyncio.timeout(self.policy.prepare_timeout):
+            async with asyncio.timeout(self.policy.prepare_timeout) as preparation:
                 audio = await self.provider()
+            # A provider may catch cancellation and return anyway. Expiration
+            # must still reject its audio even when the timeout did not raise.
+            if preparation.expired():
+                raise TimeoutError('Acknowledgement preparation expired')
             if not self.still_valid(generation):
                 self.timeline.emit('bc_discarded', decision=decision)
                 return
