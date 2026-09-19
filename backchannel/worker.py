@@ -48,7 +48,8 @@ class MeasuredAgent(Agent):
         self.timeline.emit('llm_request')
         first = True
         async for chunk in Agent.default.llm_node(self, chat_ctx, tools, model_settings):
-            text = chunk if isinstance(chunk, str) else getattr(chunk.delta, 'content', None)
+            text = (chunk if isinstance(chunk, str)
+                    else getattr(getattr(chunk, 'delta', None), 'content', None))
             if first and text:
                 self.timeline.emit('llm_first_token')
                 first = False
@@ -106,7 +107,7 @@ async def entrypoint(ctx: JobContext):
         llm=openai.LLM(model=os.getenv('LLM_MODEL', 'gpt-4o-mini'), temperature=0),
         tts=openai.TTS(model=os.getenv('TTS_MODEL', 'gpt-4o-mini-tts'),
                        voice=os.getenv('TTS_VOICE', 'alloy')),
-        vad=silero.VAD.load(),
+        vad=silero.VAD.load(min_silence_duration=0.12),
         turn_handling={
             'turn_detection': 'vad',
             'endpointing': {'mode': 'fixed', 'min_delay': 0.5, 'max_delay': 3.0},
@@ -154,8 +155,13 @@ async def entrypoint(ctx: JobContext):
 
     sender = asyncio.create_task(send_events(), name='bounded-telemetry')
     ticker = asyncio.create_task(engine.run(), name='policy-ticker')
+    cleaned = False
 
     async def cleanup():
+        nonlocal cleaned
+        if cleaned:
+            return
+        cleaned = True
         await engine.aclose()
         ticker.cancel()
         sender.cancel()
@@ -174,4 +180,3 @@ async def entrypoint(ctx: JobContext):
 
 if __name__ == '__main__':
     cli.run_app(server)
-

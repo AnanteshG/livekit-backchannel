@@ -119,7 +119,15 @@ function timeline(run, spec, max) {
     };
     if (name === 'User') for (const s of spec.segments) bar(s.start,s.end,'',s.text);
     if (name === 'STT') for (const e of run.events.filter(e=>e.kind.startsWith('stt_'))) marker(e,e.kind==='stt_final'?'●':'·');
-    if (name === 'EOT risk') for (const e of run.events.filter(e=>e.kind==='eot_risk')) marker(e,e.value.toFixed(1));
+    if (name === 'EOT risk') {
+      let previous = null;
+      const effective = new Map(run.events.filter(e=>e.kind==='eot_risk').map(e=>[e.t,e]));
+      for (const e of effective.values()) {
+        if (!previous || e.value !== previous.value) {
+          marker(e,previous && e.t-previous.t < max/8 ? '·' : e.value.toFixed(2)); previous=e;
+        }
+      }
+    }
     if (name === 'Backchannel') {
       for (const e of run.events.filter(e=>e.kind==='bc_decision')) marker(e,'▲');
       for (const e of run.events.filter(e=>e.kind==='bc_audio_received')) {

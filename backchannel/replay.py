@@ -44,6 +44,7 @@ async def replay(spec, enabled, pair_id, warmup=False):
     status, error = 'ok', None
     last_decision = 0
     telemetry_dropped = 0
+    max_schedule_lag = 0.0
 
     @room.on('data_received')
     def data(packet):
@@ -133,6 +134,7 @@ async def replay(spec, enabled, pair_id, warmup=False):
         for offset in range(0, len(audio), 640):
             deadline = origin + offset / 32000
             await asyncio.sleep(max(0, deadline - perf_counter()))
+            max_schedule_lag = max(max_schedule_lag, perf_counter() - deadline)
             block = audio[offset:offset + 640]
             await source.capture_frame(rtc.AudioFrame(block, 16000, 1, len(block) // 2))
         await source.wait_for_playout()
@@ -151,6 +153,9 @@ async def replay(spec, enabled, pair_id, warmup=False):
         await room.disconnect()
         try:
             await lk.room.delete_room(api.DeleteRoomRequest(room=room_name))
+        except Exception as exc:
+            status = 'failed'
+            error = f'{error or ""} Room cleanup failed: {type(exc).__name__}'
         finally:
             await lk.aclose()
     rtt, clock_offset = min(pongs) if pongs else (None, None)
@@ -175,10 +180,15 @@ async def replay(spec, enabled, pair_id, warmup=False):
               'audio_sha256': spec['sha256'], 'status': status, 'error': error,
               'warmup': warmup, 'events': events, 'speech_end': spec['speech_end'],
               'clock_uncertainty_ms': rtt * 500 if rtt else None,
+              'max_input_schedule_lag_ms': max_schedule_lag * 1000,
               'telemetry_dropped': telemetry_dropped,
               'metrics': run_metrics(events, spec['speech_end'])}
     if telemetry_dropped or result['metrics']['response_ms'] is None:
         result['status'] = 'failed'
+        result['error'] = result['error'] or 'Dropped telemetry or missing response audio'
+    if max_schedule_lag > .05:
+        result['status'] = 'failed'
+        result['error'] = 'Input pacing exceeded 50ms tolerance; exclude this run'
     return result
 
 

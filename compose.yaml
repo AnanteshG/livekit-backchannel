@@ -1,0 +1,15 @@
+services:
+  dashboard:
+    build: .
+    ports:
+      - "127.0.0.1:8765:8765"
+    env_file: .env
+    environment:
+      # Container requests are not loopback. Set this in .env for token access.
+      DEMO_ACCESS_KEY: ${DEMO_ACCESS_KEY:?Set a demo access key in .env}
+    volumes:
+      - ./results:/app/results:ro
+  worker:
+    build: .
+    command: ["python", "-m", "backchannel.worker", "start"]
+    env_file: .env

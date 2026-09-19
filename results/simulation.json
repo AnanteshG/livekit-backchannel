@@ -18,6 +18,7 @@
       "baseline": {
         "runs": 40,
         "valid": 40,
+        "excluded": 0,
         "failures": 0,
         "response_p50_ms": 898.7500000000005,
         "response_p95_ms": 926.1906250000004,
@@ -37,6 +38,7 @@
       "enabled": {
         "runs": 40,
         "valid": 40,
+        "excluded": 0,
         "failures": 0,
         "response_p50_ms": 898.7500000000005,
         "response_p95_ms": 926.1906250000004,

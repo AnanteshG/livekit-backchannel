@@ -122,6 +122,8 @@ class BackchannelEngine:
     def _done(self, task):
         # Cancellation may happen before the coroutine executes its try/finally.
         if self.task is task:
+            if task.cancelled():
+                self.timeline.emit('bc_cancelled', decision=self.sequence, had_audio=False)
             self.task = None
 
     def still_valid(self, generation):

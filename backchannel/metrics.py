@@ -49,14 +49,23 @@ def run_metrics(events, speech_end):
 
 
 def summarize(runs):
+    pair_candidates = {}
+    for run in runs:
+        if not run.get('warmup') and run['status'] == 'ok' and run['metrics']['response_ms'] is not None:
+            pair_candidates.setdefault(run['pair_id'], {})[run['mode']] = run
+    complete = {key for key, value in pair_candidates.items()
+                if set(value) == {'baseline', 'enabled'}}
     by_mode = {}
     for mode in ('baseline', 'enabled'):
         group = [r for r in runs if r['mode'] == mode and not r.get('warmup')]
-        good = [r for r in group if r['status'] == 'ok' and r['metrics']['response_ms'] is not None]
+        good = [r for r in group if r['pair_id'] in complete and r['status'] == 'ok'
+                and r['metrics']['response_ms'] is not None]
         responses = [r['metrics']['response_ms'] for r in good]
         bc = [v for r in good for v in r['metrics']['bc_latency_ms']]
         by_mode[mode] = {
-            'runs': len(group), 'valid': len(good), 'failures': len(group) - len(good),
+            'runs': len(group), 'valid': len(good), 'excluded': len(group) - len(good),
+            'failures': sum(r['status'] != 'ok' or r['metrics']['response_ms'] is None
+                            for r in group),
             'response_p50_ms': percentile(responses, .5),
             'response_p95_ms': percentile(responses, .95),
             'bc_p50_ms': percentile(bc, .5), 'bc_p95_ms': percentile(bc, .95),
