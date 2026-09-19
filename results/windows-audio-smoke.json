@@ -1,0 +1,1687 @@
+{
+  "measurement_kind": "livekit_smoke",
+  "description": "Four consecutive post-workaround sessions. Not a paired latency benchmark.",
+  "configuration": {
+    "input_sample_rate": 16000,
+    "output_sample_rate": 24000,
+    "cloud_recording": false,
+    "pre_connect_audio": false
+  },
+  "runs": [
+    {
+      "scenario": "short_answer",
+      "label": "Short answer",
+      "pair_id": "postfix-0",
+      "mode": "baseline",
+      "measurement_kind": "livekit",
+      "audio_sha256": "8d173076b32a973648dfefe4b53eaf2f9247d1291e9763d2013475f7439e2791",
+      "status": "ok",
+      "error": null,
+      "warmup": false,
+      "events": [
+        {
+          "t": -1.3107860000018263,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "kind": "input_speech_start",
+          "t": 0.2
+        },
+        {
+          "t": 0.43996050000714604,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "t": 0.9410077999928035,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 0.9543197000020882,
+          "kind": "stt_interim",
+          "text": "Yes.",
+          "turn": 0
+        },
+        {
+          "t": 0.9543343999976059,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 1.2420893999951659,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "t": 1.2423252000007778,
+          "kind": "stt_final",
+          "text": "Yes.",
+          "turn": 0
+        },
+        {
+          "t": 1.2423349000018789,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.192445900000166,
+          "kind": "stt_interim",
+          "text": "Tuesday works",
+          "turn": 0
+        },
+        {
+          "t": 2.192459300000337,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "kind": "input_speech_stop",
+          "t": 2.195
+        },
+        {
+          "t": 2.493236700000125,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 2.7558174000005238,
+          "kind": "stt_final",
+          "text": "Tuesday works for me.",
+          "turn": 0
+        },
+        {
+          "t": 2.755833100003656,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.8645050000050105,
+          "kind": "eot_detected",
+          "turn": 0
+        },
+        {
+          "t": 2.8646535000007134,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 2.871093599998858,
+          "kind": "llm_request",
+          "request": 1
+        },
+        {
+          "t": 2.8785114000056637,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 5.601515200003632,
+          "kind": "llm_first_token",
+          "request": 1
+        },
+        {
+          "t": 5.602437599998666,
+          "kind": "tts_request",
+          "request": 2
+        },
+        {
+          "t": 7.278971599997021,
+          "kind": "tts_first_audio",
+          "request": 2
+        },
+        {
+          "t": 7.523302899993723,
+          "kind": "agent_state",
+          "state": "speaking"
+        },
+        {
+          "t": 7.8700797999917995,
+          "kind": "response_audio_received",
+          "decision": null
+        }
+      ],
+      "speech_end": 2.195,
+      "clock_uncertainty_ms": 51.887399997212924,
+      "max_input_schedule_lag_ms": 0.6179999909363687,
+      "telemetry_dropped": 0,
+      "metrics": {
+        "response_ms": 5675.0797999917995,
+        "llm_ttft_ms": 2730.4216000047745,
+        "tts_first_ms": 1676.5339999983553,
+        "eot_ms": 669.5050000050106,
+        "stt_final_ms": 560.8174000005239,
+        "bc_latency_ms": [],
+        "backchannels": 0,
+        "eot_collisions": 0,
+        "cancelled": 0,
+        "user_overlap_ms": 0,
+        "response_overlap_ms": 0,
+        "premature_response": false
+      }
+    },
+    {
+      "scenario": "long_monologue",
+      "label": "Long monologue",
+      "pair_id": "postfix-1",
+      "mode": "enabled",
+      "measurement_kind": "livekit",
+      "audio_sha256": "7a68ebf9808fabdb3a23036fc8278b1ebc88198c377f56bc3586759263dd7575",
+      "status": "ok",
+      "error": null,
+      "warmup": false,
+      "events": [
+        {
+          "t": -1.6580261000053724,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "kind": "input_speech_start",
+          "t": 0.2
+        },
+        {
+          "t": 0.5520831999892835,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "t": 1.3074884999950882,
+          "kind": "stt_interim",
+          "text": "I want",
+          "turn": 0
+        },
+        {
+          "t": 1.3075046999874758,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.187615499991807,
+          "kind": "stt_interim",
+          "text": "I want to describe how our",
+          "turn": 0
+        },
+        {
+          "t": 2.1876274999958696,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.9734746999893105,
+          "kind": "bc_decision",
+          "decision": 1,
+          "turn": 0
+        },
+        {
+          "t": 2.975862599996617,
+          "kind": "bc_audio_submitted",
+          "decision": 1,
+          "turn": 0
+        },
+        {
+          "t": 3.240307199987001,
+          "kind": "stt_interim",
+          "text": "I want to describe how our team improved the",
+          "turn": 0
+        },
+        {
+          "t": 3.2403185999864945,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 3.3100945000041975,
+          "kind": "bc_audio_received",
+          "decision": 1
+        },
+        {
+          "t": 3.6411131999921054,
+          "kind": "bc_audio_end",
+          "decision": 1
+        },
+        {
+          "t": 3.9705263999983433,
+          "kind": "bc_audio_received_end",
+          "decision": 1,
+          "user_overlap_ms": 660.4318999941459,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 4.0512512999994215,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 4.182411099987803,
+          "kind": "stt_interim",
+          "text": "I want to describe how our team improved the checkout service.",
+          "turn": 0
+        },
+        {
+          "t": 4.182420799988904,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 4.282355099989218,
+          "kind": "stt_final",
+          "text": "I want to describe how our team improved the checkout service.",
+          "turn": 0
+        },
+        {
+          "t": 4.282369499997003,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 4.423843899989151,
+          "kind": "eot_detected",
+          "turn": 0
+        },
+        {
+          "t": 4.424126300000353,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 4.426385099999607,
+          "kind": "llm_request",
+          "request": 1
+        },
+        {
+          "t": 4.430646099994192,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 4.802278399991337,
+          "kind": "user_speech_start",
+          "turn": 1
+        },
+        {
+          "t": 5.282291299998178,
+          "kind": "stt_interim",
+          "text": "We",
+          "turn": 1
+        },
+        {
+          "t": 5.282307299989043,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 6.164211399998749,
+          "kind": "llm_first_token",
+          "request": 1
+        },
+        {
+          "t": 6.164758599989,
+          "kind": "tts_request",
+          "request": 2
+        },
+        {
+          "t": 6.338440999999875,
+          "kind": "stt_interim",
+          "text": "We started by reviewing",
+          "turn": 1
+        },
+        {
+          "t": 6.338451699994039,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 6.344451599987224,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 7.288932499999646,
+          "kind": "stt_interim",
+          "text": "We started by reviewing slow requests and",
+          "turn": 1
+        },
+        {
+          "t": 7.288948499990511,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 7.52130359999137,
+          "kind": "bc_decision",
+          "decision": 2,
+          "turn": 1
+        },
+        {
+          "t": 7.523184199992102,
+          "kind": "bc_audio_submitted",
+          "decision": 2,
+          "turn": 1
+        },
+        {
+          "t": 7.5919123999919975,
+          "kind": "bc_cancel_requested",
+          "reason": "normal_response_priority",
+          "decision": 2
+        },
+        {
+          "t": 7.5921049999888055,
+          "kind": "tts_first_audio",
+          "request": 2
+        },
+        {
+          "t": 7.593272199999774,
+          "kind": "bc_cancelled",
+          "decision": 2,
+          "had_audio": true
+        },
+        {
+          "t": 7.820565499991062,
+          "kind": "bc_audio_received",
+          "decision": 2
+        },
+        {
+          "t": 7.869955699997954,
+          "kind": "bc_audio_received_end",
+          "decision": 2,
+          "user_overlap_ms": 49.39020000689176,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 8.34719309999491,
+          "kind": "stt_interim",
+          "text": "We started by reviewing slow requests and found that the database",
+          "turn": 1
+        },
+        {
+          "t": 8.34720349998679,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 9.30043139999907,
+          "kind": "stt_final",
+          "text": "We started by reviewing slow requests and found that the date",
+          "turn": 1
+        },
+        {
+          "t": 9.300441699990188,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 9.315630699988105,
+          "kind": "stt_interim",
+          "text": "was doing the same",
+          "turn": 1
+        },
+        {
+          "t": 9.315643899986753,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.200866799990763,
+          "kind": "user_speech_stop",
+          "turn": 1
+        },
+        {
+          "t": 10.296853099993314,
+          "kind": "stt_interim",
+          "text": "was doing the same work many times.",
+          "turn": 1
+        },
+        {
+          "t": 10.29686319999746,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.446661799986032,
+          "kind": "stt_final",
+          "text": "was doing the same work many times.",
+          "turn": 1
+        },
+        {
+          "t": 10.44668009999441,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.544825099990703,
+          "kind": "eot_detected",
+          "turn": 1
+        },
+        {
+          "t": 10.544945799993002,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 10.546566399993026,
+          "kind": "llm_request",
+          "request": 3
+        },
+        {
+          "t": 10.550155399992946,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 10.950527199995122,
+          "kind": "user_speech_start",
+          "turn": 2
+        },
+        {
+          "t": 11.436477699986426,
+          "kind": "stt_interim",
+          "text": "We add",
+          "turn": 2
+        },
+        {
+          "t": 11.436489999992773,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 11.451076799989096,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 12.43790479999734,
+          "kind": "stt_interim",
+          "text": "We added a small cache",
+          "turn": 2
+        },
+        {
+          "t": 12.437918299998273,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 12.470974799987744,
+          "kind": "llm_first_token",
+          "request": 3
+        },
+        {
+          "t": 12.47165499998664,
+          "kind": "tts_request",
+          "request": 4
+        },
+        {
+          "t": 13.372580299997935,
+          "kind": "bc_decision",
+          "decision": 3,
+          "turn": 2
+        },
+        {
+          "t": 13.374339999994845,
+          "kind": "bc_audio_submitted",
+          "decision": 3,
+          "turn": 2
+        },
+        {
+          "t": 13.44135809999716,
+          "kind": "stt_interim",
+          "text": "We added a small cache and measured the results",
+          "turn": 2
+        },
+        {
+          "t": 13.441372099987348,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 13.650247899990063,
+          "kind": "bc_audio_received",
+          "decision": 3
+        },
+        {
+          "t": 13.902517799986526,
+          "kind": "user_speech_stop",
+          "turn": 2
+        },
+        {
+          "t": 13.902529499988304,
+          "kind": "bc_cancel_requested",
+          "reason": "user_stopped",
+          "decision": 3
+        },
+        {
+          "t": 13.902903199996217,
+          "kind": "bc_cancelled",
+          "decision": 3,
+          "had_audio": true
+        },
+        {
+          "t": 14.150383799996925,
+          "kind": "bc_audio_received_end",
+          "decision": 3,
+          "user_overlap_ms": 500.13590000686213,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 14.154906399999163,
+          "kind": "stt_final",
+          "text": "We added a small cache and measured the results carefully.",
+          "turn": 2
+        },
+        {
+          "t": 14.15492039998935,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 14.289753299992299,
+          "kind": "eot_detected",
+          "turn": 2
+        },
+        {
+          "t": 14.290003999994951,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 14.292707000000519,
+          "kind": "llm_request",
+          "request": 5
+        },
+        {
+          "t": 14.295963199998369,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 14.70067079999717,
+          "kind": "user_speech_start",
+          "turn": 3
+        },
+        {
+          "t": 15.133785899990471,
+          "kind": "stt_interim",
+          "text": "Then we",
+          "turn": 3
+        },
+        {
+          "t": 15.13380289998895,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 15.150166999999783,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 15.266423499997472,
+          "kind": "llm_first_token",
+          "request": 5
+        },
+        {
+          "t": 15.266902799994568,
+          "kind": "tts_request",
+          "request": 6
+        },
+        {
+          "t": 16.211855399989872,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes",
+          "turn": 3
+        },
+        {
+          "t": 16.211871299994527,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 16.488798999998835,
+          "kind": "tts_first_audio",
+          "request": 6
+        },
+        {
+          "t": 17.142830799988587,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes with a gradual roll",
+          "turn": 3
+        },
+        {
+          "t": 17.14284589998715,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 18.193004199987627,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes with a gradual rollout and watched the",
+          "turn": 3
+        },
+        {
+          "t": 18.193020499995328,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 19.183103499992285,
+          "kind": "stt_final",
+          "text": "Then we tested the changes with a gradual roll",
+          "turn": 3
+        },
+        {
+          "t": 19.183121399997617,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 19.232933499995852,
+          "kind": "stt_interim",
+          "text": "and watched the error rate before enabling",
+          "turn": 3
+        },
+        {
+          "t": 19.232949499986717,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "kind": "input_speech_stop",
+          "t": 19.7791875
+        },
+        {
+          "t": 20.20485279998684,
+          "kind": "stt_interim",
+          "text": "and watched the error rate before enabling it for every",
+          "turn": 3
+        },
+        {
+          "t": 20.204870999994455,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 20.35144329999457,
+          "kind": "user_speech_stop",
+          "turn": 3
+        },
+        {
+          "t": 20.669989699992584,
+          "kind": "stt_final",
+          "text": "and watched the error rate before enabling it for everyone.",
+          "turn": 3
+        },
+        {
+          "t": 20.67000639998878,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 20.72157109998807,
+          "kind": "eot_detected",
+          "turn": 3
+        },
+        {
+          "t": 20.721696999986307,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 20.723999899986666,
+          "kind": "llm_request",
+          "request": 7
+        },
+        {
+          "t": 20.729878599988297,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 23.93317879999813,
+          "kind": "llm_first_token",
+          "request": 7
+        },
+        {
+          "t": 23.933697199987364,
+          "kind": "tts_request",
+          "request": 8
+        },
+        {
+          "t": 25.337971999993897,
+          "kind": "tts_first_audio",
+          "request": 8
+        },
+        {
+          "t": 25.354360299999826,
+          "kind": "agent_state",
+          "state": "speaking"
+        },
+        {
+          "t": 25.680514599996968,
+          "kind": "response_audio_received",
+          "decision": null
+        }
+      ],
+      "speech_end": 19.7791875,
+      "clock_uncertainty_ms": 106.80600000341656,
+      "max_input_schedule_lag_ms": 25.533599997288547,
+      "telemetry_dropped": 0,
+      "metrics": {
+        "response_ms": 5901.327099996969,
+        "llm_ttft_ms": 3209.178900011466,
+        "tts_first_ms": 1404.274800006533,
+        "eot_ms": 942.3835999880694,
+        "stt_final_ms": 890.802199992585,
+        "bc_latency_ms": [
+          336.619800014887,
+          299.2618999996921,
+          277.6675999921281
+        ],
+        "backchannels": 3,
+        "eot_collisions": 0,
+        "cancelled": 2,
+        "user_overlap_ms": 1209.9580000078997,
+        "response_overlap_ms": 0,
+        "premature_response": false
+      }
+    },
+    {
+      "scenario": "short_answer",
+      "label": "Short answer",
+      "pair_id": "postfix-2",
+      "mode": "baseline",
+      "measurement_kind": "livekit",
+      "audio_sha256": "8d173076b32a973648dfefe4b53eaf2f9247d1291e9763d2013475f7439e2791",
+      "status": "ok",
+      "error": null,
+      "warmup": false,
+      "events": [
+        {
+          "t": -1.2941678500064882,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "kind": "input_speech_start",
+          "t": 0.2
+        },
+        {
+          "t": 0.4596707500022603,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "t": 0.958481749999919,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 1.00087235000683,
+          "kind": "stt_interim",
+          "text": "Yes.",
+          "turn": 0
+        },
+        {
+          "t": 1.000883150001755,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 1.246486450007069,
+          "kind": "stt_final",
+          "text": "Yes.",
+          "turn": 0
+        },
+        {
+          "t": 1.2465022499964107,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 1.2682388499961235,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "kind": "input_speech_stop",
+          "t": 2.195
+        },
+        {
+          "t": 2.252026849993854,
+          "kind": "stt_interim",
+          "text": "Tuesday works",
+          "turn": 0
+        },
+        {
+          "t": 2.252039650004008,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.6103008500067517,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 2.8621704499964835,
+          "kind": "stt_final",
+          "text": "Tuesday works for me.",
+          "turn": 0
+        },
+        {
+          "t": 2.8621830500051146,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.9822889500064775,
+          "kind": "eot_detected",
+          "turn": 0
+        },
+        {
+          "t": 2.9824282500048866,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 2.9847518500027945,
+          "kind": "llm_request",
+          "request": 1
+        },
+        {
+          "t": 2.989008250006009,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 4.654009050005698,
+          "kind": "llm_first_token",
+          "request": 1
+        },
+        {
+          "t": 4.654729550005868,
+          "kind": "tts_request",
+          "request": 2
+        },
+        {
+          "t": 5.838424150002538,
+          "kind": "tts_first_audio",
+          "request": 2
+        },
+        {
+          "t": 5.901204049994703,
+          "kind": "agent_state",
+          "state": "speaking"
+        },
+        {
+          "t": 6.50987460000033,
+          "kind": "response_audio_received",
+          "decision": null
+        }
+      ],
+      "speech_end": 2.195,
+      "clock_uncertainty_ms": 54.697049999958836,
+      "max_input_schedule_lag_ms": 0.37650000012945384,
+      "telemetry_dropped": 0,
+      "metrics": {
+        "response_ms": 4314.87460000033,
+        "llm_ttft_ms": 1669.2572000029031,
+        "tts_first_ms": 1183.6945999966701,
+        "eot_ms": 787.2889500064776,
+        "stt_final_ms": 667.1704499964836,
+        "bc_latency_ms": [],
+        "backchannels": 0,
+        "eot_collisions": 0,
+        "cancelled": 0,
+        "user_overlap_ms": 0,
+        "response_overlap_ms": 0,
+        "premature_response": false
+      }
+    },
+    {
+      "scenario": "long_monologue",
+      "label": "Long monologue",
+      "pair_id": "postfix-3",
+      "mode": "enabled",
+      "measurement_kind": "livekit",
+      "audio_sha256": "7a68ebf9808fabdb3a23036fc8278b1ebc88198c377f56bc3586759263dd7575",
+      "status": "ok",
+      "error": null,
+      "warmup": false,
+      "events": [
+        {
+          "t": -1.2960748000041349,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "kind": "input_speech_start",
+          "t": 0.2
+        },
+        {
+          "t": 0.45112919999519363,
+          "kind": "user_speech_start",
+          "turn": 0
+        },
+        {
+          "t": 0.973711300001014,
+          "kind": "stt_interim",
+          "text": "I want",
+          "turn": 0
+        },
+        {
+          "t": 0.9737228000012692,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 1.9938229999970645,
+          "kind": "stt_interim",
+          "text": "I want to describe how our",
+          "turn": 0
+        },
+        {
+          "t": 1.9938372000033269,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 2.8721947000012733,
+          "kind": "bc_decision",
+          "decision": 1,
+          "turn": 0
+        },
+        {
+          "t": 2.873062900005607,
+          "kind": "bc_audio_submitted",
+          "decision": 1,
+          "turn": 0
+        },
+        {
+          "t": 2.9790983999992022,
+          "kind": "stt_interim",
+          "text": "I want to describe how our team improved the",
+          "turn": 0
+        },
+        {
+          "t": 2.9791178000014042,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 3.00139799999306,
+          "kind": "bc_audio_received",
+          "decision": 1
+        },
+        {
+          "t": 3.4989865999959875,
+          "kind": "bc_audio_end",
+          "decision": 1
+        },
+        {
+          "t": 3.850597200003685,
+          "kind": "bc_audio_received_end",
+          "decision": 1,
+          "user_overlap_ms": 849.1992000106254,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 4.002464699995471,
+          "kind": "user_speech_stop",
+          "turn": 0
+        },
+        {
+          "t": 4.038377599994419,
+          "kind": "stt_interim",
+          "text": "I want to describe how our team improved the checkout service.",
+          "turn": 0
+        },
+        {
+          "t": 4.038391399997636,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 4.281296900007874,
+          "kind": "stt_final",
+          "text": "I want to describe how our team improved the checkout service.",
+          "turn": 0
+        },
+        {
+          "t": 4.281312599996454,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 0
+        },
+        {
+          "t": 4.3750788000033936,
+          "kind": "eot_detected",
+          "turn": 0
+        },
+        {
+          "t": 4.375305499997921,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 4.377514199994039,
+          "kind": "llm_request",
+          "request": 1
+        },
+        {
+          "t": 4.382266700005857,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 4.80203760000586,
+          "kind": "user_speech_start",
+          "turn": 1
+        },
+        {
+          "t": 5.2806941000017105,
+          "kind": "stt_interim",
+          "text": "We",
+          "turn": 1
+        },
+        {
+          "t": 5.28070519999892,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 6.288695499999449,
+          "kind": "stt_interim",
+          "text": "We started by reviewing",
+          "turn": 1
+        },
+        {
+          "t": 6.288708299995051,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 6.300911400001496,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 6.328594899998279,
+          "kind": "llm_first_token",
+          "request": 1
+        },
+        {
+          "t": 6.329655900000944,
+          "kind": "tts_request",
+          "request": 2
+        },
+        {
+          "t": 7.294796999995015,
+          "kind": "stt_interim",
+          "text": "We started by reviewing slow requests and",
+          "turn": 1
+        },
+        {
+          "t": 7.294808799997554,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 7.420865699998103,
+          "kind": "bc_decision",
+          "decision": 2,
+          "turn": 1
+        },
+        {
+          "t": 7.422827799993684,
+          "kind": "bc_audio_submitted",
+          "decision": 2,
+          "turn": 1
+        },
+        {
+          "t": 7.641451799994684,
+          "kind": "bc_cancel_requested",
+          "reason": "normal_response_priority",
+          "decision": 2
+        },
+        {
+          "t": 7.641730200004531,
+          "kind": "tts_first_audio",
+          "request": 2
+        },
+        {
+          "t": 7.642057899996871,
+          "kind": "bc_cancelled",
+          "decision": 2,
+          "had_audio": true
+        },
+        {
+          "t": 7.83178069999849,
+          "kind": "bc_audio_received",
+          "decision": 2
+        },
+        {
+          "t": 8.040797400002484,
+          "kind": "bc_audio_received_end",
+          "decision": 2,
+          "user_overlap_ms": 209.0167000039944,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 8.285122500004945,
+          "kind": "stt_interim",
+          "text": "We started by reviewing slow requests and found that the database",
+          "turn": 1
+        },
+        {
+          "t": 8.285134599995217,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 9.290852000005543,
+          "kind": "stt_final",
+          "text": "We started by reviewing slow requests and found that the data",
+          "turn": 1
+        },
+        {
+          "t": 9.290864099995815,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 9.29601590000675,
+          "kind": "stt_interim",
+          "text": "was doing the same",
+          "turn": 1
+        },
+        {
+          "t": 9.29602850000083,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.203961499995785,
+          "kind": "user_speech_stop",
+          "turn": 1
+        },
+        {
+          "t": 10.284334099997068,
+          "kind": "stt_interim",
+          "text": "was doing the same work many times.",
+          "turn": 1
+        },
+        {
+          "t": 10.284345799998846,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.505553199996939,
+          "kind": "stt_final",
+          "text": "was doing the same work many times.",
+          "turn": 1
+        },
+        {
+          "t": 10.505563700004132,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 1
+        },
+        {
+          "t": 10.57588279999618,
+          "kind": "eot_detected",
+          "turn": 1
+        },
+        {
+          "t": 10.57603690000542,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 10.578758400006336,
+          "kind": "llm_request",
+          "request": 3
+        },
+        {
+          "t": 10.58262939999986,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 10.951976600001217,
+          "kind": "user_speech_start",
+          "turn": 2
+        },
+        {
+          "t": 11.441064700004063,
+          "kind": "stt_interim",
+          "text": "We add",
+          "turn": 2
+        },
+        {
+          "t": 11.441076899995096,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 11.450826500004041,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 11.90680880000582,
+          "kind": "llm_first_token",
+          "request": 3
+        },
+        {
+          "t": 11.907664099999238,
+          "kind": "tts_request",
+          "request": 4
+        },
+        {
+          "t": 12.431408799995552,
+          "kind": "stt_interim",
+          "text": "We added a small cache",
+          "turn": 2
+        },
+        {
+          "t": 12.431421400004183,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 12.89619970000058,
+          "kind": "tts_first_audio",
+          "request": 4
+        },
+        {
+          "t": 13.45522780000465,
+          "kind": "stt_interim",
+          "text": "We added a small cache and measured the results",
+          "turn": 2
+        },
+        {
+          "t": 13.455241699994076,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 13.961797900003148,
+          "kind": "user_speech_stop",
+          "turn": 2
+        },
+        {
+          "t": 14.138527699993574,
+          "kind": "stt_final",
+          "text": "We added a small cache and measured the results carefully.",
+          "turn": 2
+        },
+        {
+          "t": 14.138548400005675,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 2
+        },
+        {
+          "t": 14.351458400007687,
+          "kind": "eot_detected",
+          "turn": 2
+        },
+        {
+          "t": 14.35164550000627,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 14.354525700007798,
+          "kind": "llm_request",
+          "request": 5
+        },
+        {
+          "t": 14.365397600005963,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 14.7013253000041,
+          "kind": "user_speech_start",
+          "turn": 3
+        },
+        {
+          "t": 15.15373799999361,
+          "kind": "stt_interim",
+          "text": "Then we",
+          "turn": 3
+        },
+        {
+          "t": 15.153755999999703,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 15.201034199999413,
+          "kind": "agent_state",
+          "state": "listening"
+        },
+        {
+          "t": 15.561614499994903,
+          "kind": "llm_first_token",
+          "request": 5
+        },
+        {
+          "t": 15.56537670000398,
+          "kind": "tts_request",
+          "request": 6
+        },
+        {
+          "t": 16.14509669999825,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes",
+          "turn": 3
+        },
+        {
+          "t": 16.145120900007896,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 17.119277999998303,
+          "kind": "bc_decision",
+          "decision": 3,
+          "turn": 3
+        },
+        {
+          "t": 17.1209172999952,
+          "kind": "bc_audio_submitted",
+          "decision": 3,
+          "turn": 3
+        },
+        {
+          "t": 17.229636599993682,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes with a gradual",
+          "turn": 3
+        },
+        {
+          "t": 17.229647900006967,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 17.26507560000755,
+          "kind": "bc_cancel_requested",
+          "reason": "normal_response_priority",
+          "decision": 3
+        },
+        {
+          "t": 17.265231900004437,
+          "kind": "tts_first_audio",
+          "request": 6
+        },
+        {
+          "t": 17.265491300000576,
+          "kind": "bc_cancelled",
+          "decision": 3,
+          "had_audio": true
+        },
+        {
+          "t": 17.401191299999482,
+          "kind": "bc_audio_received",
+          "decision": 3
+        },
+        {
+          "t": 17.550036899998087,
+          "kind": "bc_audio_received_end",
+          "decision": 3,
+          "user_overlap_ms": 148.84559999860514,
+          "response_overlap_ms": 0
+        },
+        {
+          "t": 18.143496699995012,
+          "kind": "stt_interim",
+          "text": "Then we tested the changes with a gradual rollout and watched the",
+          "turn": 3
+        },
+        {
+          "t": 18.143508900000597,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 19.139672899997095,
+          "kind": "stt_final",
+          "text": "Then we tested the changes with a gradual",
+          "turn": 3
+        },
+        {
+          "t": 19.13968570000725,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 19.141350399993826,
+          "kind": "stt_interim",
+          "text": "and watched the error rate before",
+          "turn": 3
+        },
+        {
+          "t": 19.14136160000635,
+          "kind": "eot_risk",
+          "value": 0.1,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "kind": "input_speech_stop",
+          "t": 19.7791875
+        },
+        {
+          "t": 20.140386700004456,
+          "kind": "stt_interim",
+          "text": "and watched the error rate before enabling it for everyone.",
+          "turn": 3
+        },
+        {
+          "t": 20.140399199997773,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 20.35257430000638,
+          "kind": "user_speech_stop",
+          "turn": 3
+        },
+        {
+          "t": 20.582128900001408,
+          "kind": "stt_final",
+          "text": "and watched the error rate before enabling it for everyone.",
+          "turn": 3
+        },
+        {
+          "t": 20.582142600003863,
+          "kind": "eot_risk",
+          "value": 0.85,
+          "source": "punctuation_confidence_heuristic",
+          "turn": 3
+        },
+        {
+          "t": 20.72417879999557,
+          "kind": "eot_detected",
+          "turn": 3
+        },
+        {
+          "t": 20.724315200001,
+          "kind": "response_created",
+          "source": "generate_reply"
+        },
+        {
+          "t": 20.72598210000433,
+          "kind": "llm_request",
+          "request": 7
+        },
+        {
+          "t": 20.729792300000554,
+          "kind": "agent_state",
+          "state": "thinking"
+        },
+        {
+          "t": 21.855424599998514,
+          "kind": "llm_first_token",
+          "request": 7
+        },
+        {
+          "t": 21.855987400005688,
+          "kind": "tts_request",
+          "request": 8
+        },
+        {
+          "t": 23.194419000006747,
+          "kind": "tts_first_audio",
+          "request": 8
+        },
+        {
+          "t": 23.709444499996607,
+          "kind": "agent_state",
+          "state": "speaking"
+        },
+        {
+          "t": 23.95109319999756,
+          "kind": "response_audio_received",
+          "decision": null
+        }
+      ],
+      "speech_end": 19.7791875,
+      "clock_uncertainty_ms": 51.23730000195792,
+      "max_input_schedule_lag_ms": 5.443999994895421,
+      "telemetry_dropped": 0,
+      "metrics": {
+        "response_ms": 4171.905699997559,
+        "llm_ttft_ms": 1129.442499994184,
+        "tts_first_ms": 1338.4316000010585,
+        "eot_ms": 944.9912999955714,
+        "stt_final_ms": 802.9414000014085,
+        "bc_latency_ms": [
+          129.20329999178648,
+          410.9150000003865,
+          281.91330000117887
+        ],
+        "backchannels": 3,
+        "eot_collisions": 0,
+        "cancelled": 2,
+        "user_overlap_ms": 1207.061500013225,
+        "response_overlap_ms": 0,
+        "premature_response": false
+      }
+    }
+  ]
+}

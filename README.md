@@ -2,7 +2,7 @@
 
 An independent, cancellable listening-acknowledgement engine on **LiveKit Agents**, built for the Blue Machines SDE-1 assignment. Python owns the engine, voice worker, replay runner, metrics and web server. A small vanilla JavaScript dashboard compares paired runs and connects a microphone to LiveKit.
 
-**Current evidence:** the local dashboard, automated tests, eight WAV fixtures and 40 simulated pairs work. Cloud replay and microphone conversation require credentials and have **not** been verified against real providers. No public live deployment is claimed. The included zero latency delta comes from a controlled simulation, not a claim that backchanneling is free in production.
+**Current evidence:** real prerecorded audio has passed through LiveKit Cloud, Deepgram STT, OpenAI LLM and OpenAI TTS. The receiver observed both normal responses and independent acknowledgements. The local dashboard, 31 automated tests, eight WAV fixtures and 40 simulated pairs also work. See `results/analysis.md` for the paired measurements and limitations. No public live deployment is claimed; the web server and worker run locally.
 
 ## Quick start
 
@@ -34,6 +34,8 @@ Copy `.env.example` to `.env` and fill these values locally. Never paste secrets
 | `DEMO_ACCESS_KEY` | Required when the dashboard is accessed beyond loopback |
 
 Defaults: Deepgram `nova-3`, OpenAI `gpt-4o-mini`, `gpt-4o-mini-tts`, voice `alloy`. Model/voice overrides are in `.env.example`; keep them identical in both experiment arms. Both arms disable preemptive generation, use the same fixed endpointing and interruption settings, and start with identical instructions and empty conversation history.
+
+Windows audio compatibility: room input is explicitly 16 kHz to match Deepgram and Silero, and response output remains OpenAI's native 24 kHz. Cloud session recording is disabled; our own event telemetry remains enabled. This avoids the extra SDK Soxr conversions implicated by a native `fft4g_cache.h` / `FFT_LEN == -1` assertion observed on Windows. Do not patch the LiveKit DLL or ignore native assertions. Stop the crashed worker and restart after updating. The included full benchmark predates this workaround and is labelled accordingly; its numbers must not be treated as a benchmark of the revised audio configuration.
 
 In another terminal with the virtual environment active:
 
@@ -144,7 +146,9 @@ Response latency uses the replay client's monotonic clock for both boundaries an
 
 Five ping/pong samples align worker `perf_counter()` with receiver `perf_counter()`. The lowest-RTT sample supplies the midpoint offset; half that RTT is the reported uncertainty. Only worker events need this mapping; the primary response metric does not. Backchannel correlations use aligned submission events rather than arrival order of data packets. Browser `playing` events are shown as diagnostics and are not substituted for PCM onset measurements.
 
-P50/P95 use linear interpolation. Headline mode distributions use the **same complete matched pairs**. Failures, missing responses, telemetry drops, input pacing failures and unpaired successes are retained but excluded from the comparison. Paired mean differences get a deterministic bootstrap interval stratified by scenario. A regression flag requires the lower 95% bound to exceed **30ms**. This is an exploratory flag, not a powered equivalence test. With few samples, do not interpret a small difference as proof of causation or no regression.
+Sentence pauses can cause multiple detected turns and cancelled generations inside one fixture. LLM/TTS node events therefore carry request IDs. Each stage summary uses the last completed matching request before the first received response; EOT uses the last detected turn end before that response. These diagnostics do not form an additive latency breakdown or guarantee that both nodes belong to the same generation. All attempts remain in the timeline. A negative response latency means the agent answered before the fixture ended and is also counted as a premature response, not treated as a speed improvement.
+
+P50/P95 use linear interpolation. Headline mode distributions use the **same complete matched pairs**. Failures, missing responses, telemetry drops, input pacing failures and unpaired successes are retained but excluded from the comparison. Paired mean differences get a deterministic bootstrap interval stratified by scenario only when every represented scenario has at least two complete pairs. A regression flag requires the lower 95% bound to exceed **30ms**. This is an exploratory flag, not a powered equivalence test. With few samples, do not interpret a small difference as proof of causation or no regression.
 
 ## Behaviour and what became slower
 
@@ -152,7 +156,7 @@ A potentially bad backchannel is one that starts in the final **400ms** of the u
 
 The included **simulation** has 40 complete pairs (80 runs), response P50 **898.8ms**, P95 **926.2ms** in both modes, and backchannel P50 **120ms**. There are **65** audible simulated acknowledgements, **10** cancellations and **5** near-EOT collisions. The collisions occur in the mid-sentence-pause scenario's final segment and expose the limits of duration/heuristic gating. Zero simulated response delta is imposed by the shared provider schedule; it does not measure CPU contention or provider variance. See `results/analysis.md`.
 
-**What became slower in a real agent is currently unknown.** No real provider measurements were available. There is no acknowledgement queue in the response path, but a live benchmark is needed to detect indirect slowdowns. Response-overlap observations and positive paired deltas flag contention; they cannot prove that a particular acknowledgement caused a delay. Naturalness also needs blinded human listening evaluations.
+The real replay contains **15 complete pairs**. Baseline/enabled response P50 is **4,579.3/4,328.6 ms**; P95 is **5,859.8/6,555.1 ms**. The paired mean difference is **+255.3 ms**, with a 95% bootstrap interval **[unavailable, unavailable] ms**. These are small-sample measurements on a shared development laptop, not proof of causation or equivalence. See `results/analysis.md` for stage metrics, collisions, retained failures and the setup-failure retry. Naturalness still needs blinded human listening evaluations.
 
 ## Reference-project design review
 

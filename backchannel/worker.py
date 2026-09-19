@@ -175,8 +175,17 @@ async def entrypoint(ctx: JobContext):
 
     ctx.add_shutdown_callback(cleanup)
     try:
+        # Match Deepgram/Silero directly. The SDK's default 24 kHz input and
+        # cloud recorder otherwise use Soxr, which can assert in its Windows
+        # FFT cache. Keep OpenAI's native 24 kHz response output unchanged.
+        # Our own bounded event telemetry does not depend on cloud recording.
         await session.start(agent=MeasuredAgent(engine, timeline), room=ctx.room,
-            room_options=room_io.RoomOptions(participant_identity=participant.identity))
+            record=False,
+            room_options=room_io.RoomOptions(
+                participant_identity=participant.identity,
+                audio_input=room_io.AudioInputOptions(
+                    sample_rate=16000, pre_connect_audio=False),
+                audio_output=room_io.AudioOutputOptions(sample_rate=24000)))
         timeline.emit('ready', enabled=enabled)
     except BaseException:
         await cleanup()

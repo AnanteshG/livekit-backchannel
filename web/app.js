@@ -23,7 +23,7 @@ async function load() {
     report = await response.json();
     $('notice').textContent = kind === 'simulation'
       ? 'SIMULATED DATA · Real engine, scripted speech signals and virtual provider delays. These numbers test policy behaviour; they do not demonstrate real LiveKit latency or a performance improvement.'
-      : 'LIVE AUDIO REPLAY · Response latency uses PCM received by the replay client. Backchannel latency includes clock-alignment uncertainty. Hardware speaker latency is not measured.';
+      : 'LIVE AUDIO REPLAY · Response latency uses PCM received by the replay client. Backchannel latency includes clock-alignment uncertainty. Hardware speaker latency is not measured.' + (report.configuration_note ? ` ${report.configuration_note}` : '');
     renderSummary(); renderScenarios(); renderPair();
   } catch (error) {
     report = null;
