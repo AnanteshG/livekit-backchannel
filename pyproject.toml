@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "livekit-backchannel-lab"
+version = "0.1.0"
+description = "Cancellable backchannels and paired audio experiments for LiveKit"
+requires-python = ">=3.11"
+dependencies = [
+  "livekit-agents[deepgram,openai,silero]==1.8.2",
+  "fastapi==0.141.1", "uvicorn==0.53.0", "python-dotenv==1.2.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "httpx==0.28.1", "ruff==0.16.8"]
+
+[tool.setuptools]
+packages = ["backchannel"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
