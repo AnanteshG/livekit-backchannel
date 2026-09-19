@@ -155,6 +155,7 @@ function resetLive(message) {
   $('orb').classList.remove('on'); $('remoteAudio').replaceChildren();
 }
 $('connect').onclick = async () => {
+  let workerReady = false;
   $('connect').disabled = true; $('liveState').textContent = 'Connecting…';
   try {
     if (!window.LivekitClient) throw new Error('LiveKit browser library failed to load.');
@@ -176,7 +177,7 @@ $('connect').onclick = async () => {
         const {event}=JSON.parse(new TextDecoder().decode(payload));
         if(event.kind==='clock_pong') return;
         log(`${event.t.toFixed(2)}s · ${event.kind}${event.text?' · '+event.text:''}${event.state?' · '+event.state:''}`);
-        if(event.kind==='ready') {clearTimeout(readyTimer);$('liveState').textContent='The agent is listening';$('orb').classList.add('on');}
+        if(event.kind==='ready') {workerReady=true;clearTimeout(readyTimer);$('liveState').textContent='The agent is listening';$('orb').classList.add('on');}
         if(event.kind==='agent_state') $('liveState').textContent=`Agent ${event.state}`;
         if(event.kind==='provider_error') $('liveHelp').textContent='The agent reported a provider error. Check the worker logs.';
       } catch(error) { log('Could not decode agent event'); }
@@ -186,7 +187,7 @@ $('connect').onclick = async () => {
     await room.localParticipant.setMicrophoneEnabled(true);
     $('disconnect').disabled=false; $('liveHelp').textContent='Microphone connected. Wait for the agent to be ready, then speak.';
     log('Microphone connected; waiting for worker');
-    readyTimer=setTimeout(()=>{ if(room) {$('liveHelp').textContent='No worker ready signal within 60 seconds. Check worker startup and credentials.';log('Worker readiness timed out');}},60000);
+    if(!workerReady) readyTimer=setTimeout(()=>{ if(room && !workerReady) {$('liveHelp').textContent='No worker ready signal within 60 seconds. Check worker startup and credentials.';log('Worker readiness timed out');}},60000);
   } catch(error) {
     if(room) {await room.disconnect();room=null;}
     resetLive('Could not connect'); $('liveHelp').textContent=error.message; log(error.message);

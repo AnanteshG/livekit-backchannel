@@ -25,6 +25,7 @@ class MeasuredAgent(Agent):
             'Respond naturally in one or two concise sentences. Do not add listening noises '
             'or fillers; a separate audio channel handles those.'))
         self.engine, self.timeline = engine, timeline
+        self.request_sequence = 0
 
     async def on_user_turn_completed(self, turn_ctx, new_message):
         self.engine.turn_completed()
@@ -45,23 +46,27 @@ class MeasuredAgent(Agent):
 
     async def llm_node(self, chat_ctx, tools, model_settings):
         self.engine.set_agent_busy(True)
-        self.timeline.emit('llm_request')
+        self.request_sequence += 1
+        request = self.request_sequence
+        self.timeline.emit('llm_request', request=request)
         first = True
         async for chunk in Agent.default.llm_node(self, chat_ctx, tools, model_settings):
             text = (chunk if isinstance(chunk, str)
                     else getattr(getattr(chunk, 'delta', None), 'content', None))
             if first and text:
-                self.timeline.emit('llm_first_token')
+                self.timeline.emit('llm_first_token', request=request)
                 first = False
             yield chunk
 
     async def tts_node(self, text, model_settings):
-        self.timeline.emit('tts_request')
+        self.request_sequence += 1
+        request = self.request_sequence
+        self.timeline.emit('tts_request', request=request)
         first = True
         async for frame in Agent.default.tts_node(self, text, model_settings):
             if first:
                 self.engine.set_agent_busy(True)
-                self.timeline.emit('tts_first_audio')
+                self.timeline.emit('tts_first_audio', request=request)
                 first = False
             yield frame
 

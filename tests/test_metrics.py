@@ -47,3 +47,21 @@ def test_percentiles_interpolate_and_empty_is_null():
     assert percentile([], .95) is None
     assert percentile([1, 2, 3, 4], .5) == 2.5
     assert percentile([1, 2, 3, 4], .95) == pytest.approx(3.85)
+
+
+def test_retried_nodes_and_multiple_turn_ends_do_not_mix_stage_clocks():
+    events = [
+        {'t': 1, 'kind': 'eot_detected'},
+        {'t': 1.1, 'kind': 'llm_request', 'request': 1},
+        {'t': 1.5, 'kind': 'llm_first_token', 'request': 1},
+        {'t': 3.2, 'kind': 'eot_detected'},
+        {'t': 3.3, 'kind': 'llm_request', 'request': 2},
+        {'t': 3.4, 'kind': 'llm_request', 'request': 3},
+        {'t': 3.8, 'kind': 'llm_first_token', 'request': 2},
+        {'t': 4, 'kind': 'response_audio_received'},
+        {'t': 5, 'kind': 'eot_detected'},
+        {'t': 5.5, 'kind': 'llm_first_token', 'request': 3},
+    ]
+    metrics = run_metrics(events, 3)
+    assert metrics['eot_ms'] == pytest.approx(200)
+    assert metrics['llm_ttft_ms'] == pytest.approx(500)

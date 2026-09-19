@@ -13,26 +13,34 @@ def percentile(values, q):
     return values[lower] + (values[upper] - values[lower]) * (index - lower)
 
 
-def difference(events, start, end):
-    a = next((x['t'] for x in events if x['kind'] == start), None)
-    b = next((x['t'] for x in events if x['kind'] == end), None)
-    return None if a is None or b is None else (b - a) * 1000
+def difference(events, start, end, cutoff=float('inf')):
+    # Correlate concurrent/retried nodes; never subtract unrelated requests.
+    starts, completed = {}, []
+    for event in sorted(events, key=lambda x: x['t']):
+        if event['t'] > cutoff:
+            break
+        request = event.get('request')
+        if event['kind'] == start:
+            starts[request] = event['t']
+        elif event['kind'] == end and request in starts:
+            completed.append((event['t'] - starts.pop(request)) * 1000)
+    return completed[-1] if completed else None
 
 
 def run_metrics(events, speech_end):
     # All event times must already be mapped to the replay client's clock.
     real = [x['t'] for x in events if x['kind'] == 'response_audio_received']
+    cutoff = min(real) if real else float('inf')
+    eots = [x['t'] for x in events if x['kind'] == 'eot_detected' and x['t'] <= cutoff]
     decisions = {x['decision']: x['t'] for x in events if x['kind'] == 'bc_decision'}
     acks = [x for x in events if x['kind'] == 'bc_audio_received']
     latency = [(x['t'] - decisions[x['decision']]) * 1000 for x in acks
                if x.get('decision') in decisions]
     return {
         'response_ms': (real[0] - speech_end) * 1000 if real else None,
-        'llm_ttft_ms': difference(events, 'llm_request', 'llm_first_token'),
-        'tts_first_ms': difference(events, 'tts_request', 'tts_first_audio'),
-        'eot_ms': (next((x['t'] for x in events if x['kind'] == 'eot_detected'),
-                       speech_end) - speech_end) * 1000
-                  if any(x['kind'] == 'eot_detected' for x in events) else None,
+        'llm_ttft_ms': difference(events, 'llm_request', 'llm_first_token', cutoff),
+        'tts_first_ms': difference(events, 'tts_request', 'tts_first_audio', cutoff),
+        'eot_ms': (max(eots) - speech_end) * 1000 if eots else None,
         'stt_final_ms': (max(x['t'] for x in events if x['kind'] == 'stt_final')
                          - speech_end) * 1000
                         if any(x['kind'] == 'stt_final' for x in events) else None,
