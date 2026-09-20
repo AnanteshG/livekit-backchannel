@@ -11,3 +11,4 @@ RUN useradd --create-home lab && chown -R lab:lab /app
 USER lab
 EXPOSE 8765
 CMD ["python", "-m", "uvicorn", "backchannel.web:app", "--host", "0.0.0.0", "--port", "8765", "--no-proxy-headers"]
+CMD ["python", "-m", "backchannel.worker", "start"]

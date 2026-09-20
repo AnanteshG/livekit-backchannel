@@ -12,3 +12,4 @@ node_modules/
 work/
 runs/
 *.egg-info/
+secrets.env
