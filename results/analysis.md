@@ -1,5 +1,7 @@
 # Results and interpretation
 
+**Acknowledgement audio revision:** the current worker and simulator use four cached OpenAI-generated listening clips (`mm-hmm`, `mmm`, `uh-huh`, and `go on`). The saved results below used the original Windows-generated `ack.wav` (retained for reproducibility). They have not been re-measured with the new clips.
+
 ## Real LiveKit audio replay — 2026-09-19
 
 **Configuration boundary:** this full paired dataset was collected before the Windows audio workaround. It used default 24 kHz room input and cloud session recording. The current worker requests 16 kHz input and disables cloud recording to avoid additional Soxr resampling after a native `FFT_LEN == -1` assertion was reported. The paired comparisons below remain internally consistent for the earlier configuration, but are not performance measurements of the revised worker. Subsequent smoke checks are reported separately and are not pooled into these statistics.

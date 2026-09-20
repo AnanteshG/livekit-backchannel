@@ -10,7 +10,8 @@ from livekit.agents import Agent, AgentServer, AgentSession, JobContext, cli, st
 from livekit.agents.voice import room_io
 from livekit.plugins import deepgram, openai, silero
 
-from .audio import ROOT, LiveKitSink, pcm
+from .acknowledgements import Acknowledgements
+from .audio import ROOT, LiveKitSink
 from .engine import BackchannelEngine
 from .events import Timeline
 
@@ -101,10 +102,13 @@ async def entrypoint(ctx: JobContext):
     source = rtc.AudioSource(16000, 1, queue_size_ms=40)
     track = rtc.LocalAudioTrack.create_audio_track('backchannel', source)
     await ctx.room.local_participant.publish_track(track)
-    cached_audio = pcm(ROOT / 'scenarios/audio/ack.wav')
+    clips = Acknowledgements()
 
     async def cached():
-        return cached_audio
+        phrase, audio = clips.next_clip()
+        timeline.emit('bc_clip_selected', decision=engine.sequence, phrase=phrase,
+                      duration_ms=len(audio) / 32)
+        return audio
 
     engine = BackchannelEngine(cached, LiveKitSink(source), timeline, enabled=enabled)
     session = AgentSession(

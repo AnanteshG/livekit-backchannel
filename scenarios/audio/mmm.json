@@ -1,0 +1,9 @@
+{
+  "model": "gpt-4o-mini-tts",
+  "voice": "alloy",
+  "text": "Mmm.",
+  "instructions": "Make one short, soft, natural listening acknowledgement. You are quietly listening while someone else continues talking. Warm and neutral, not a question, not an enthusiastic agreement, not a thinking sound. Under one second. Do not pronounce letters or add words. For Mmm use a gentle closed-mouth listening hum, not a puzzled or thinking sound. For Go on use a light encouraging tone, never commanding.",
+  "duration_seconds": 0.5105625,
+  "sha256": "ff124634380bed22b4e88c495f74d04085b6fc18bc451f079c563beec21a6b3d",
+  "generated_audio": true
+}

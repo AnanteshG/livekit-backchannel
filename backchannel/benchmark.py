@@ -7,6 +7,7 @@ import random
 from dataclasses import asdict
 from pathlib import Path
 
+from .acknowledgements import Acknowledgements
 from .audio import ROOT, pcm
 from .engine import BackchannelEngine, Policy
 from .events import Timeline
@@ -58,7 +59,7 @@ async def simulate(spec, enabled, seed, pair_id):
     rng = random.Random(seed)
     end = spec['speech_end']
     eot, llm, tts = .5, rng.uniform(.12, .23), rng.uniform(.12, .28)
-    ack_duration = len(pcm(ROOT / 'scenarios/audio/ack.wav')) / 32000
+    clips = Acknowledgements()
 
     class Sink:
         def clear(self):
@@ -71,7 +72,7 @@ async def simulate(spec, enabled, seed, pair_id):
             start = clock()
             timeline.emit('bc_audio_received', decision=decision, synthetic=True)
             try:
-                await clock.sleep(ack_duration)
+                await clock.sleep(len(audio) / 32000)
             finally:
                 timeline.emit('bc_audio_received_end', decision=decision,
                               user_overlap_ms=max(0, min(clock(), end) - start) * 1000,
@@ -79,7 +80,10 @@ async def simulate(spec, enabled, seed, pair_id):
 
     async def provider():
         await clock.sleep(.08)
-        return b'synthetic'
+        phrase, audio = clips.next_clip()
+        timeline.emit('bc_clip_selected', decision=engine.sequence, phrase=phrase,
+                      duration_ms=len(audio) / 32)
+        return audio
 
     engine = BackchannelEngine(provider, Sink(), timeline, enabled=enabled, clock=clock)
     events = []
