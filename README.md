@@ -187,3 +187,9 @@ Before public production use: implement user authentication, shared rate limitin
 Pinned Python SDK: LiveKit Agents 1.8.2. Vendored browser SDK version and SHA256 are in `web/vendor/VERSION.txt`, with its upstream license.
 
 The dashboard opens on **Approach**, explaining architecture, policy choices, cancellation races, benchmark fairness and limitations before linking to Experiment and Live conversation. Its evidence summary reads the selected result file instead of duplicating numbers.
+
+### Website online but waiting for worker
+
+The Vercel web app serves the page and room tokens. The Python voice worker is a separate process; deploying the web app does not start it. If it runs on a laptop, closing it or putting that laptop to sleep makes the voice demo unavailable.
+
+Start `python -m backchannel.worker dev` from the repository with its environment configured, wait for worker registration, then reconnect from the website. For an unattended submission demo, deploy the worker on LiveKit Cloud or an always-running server using the same LiveKit project and `backchannel-lab` dispatch name. A local restart restores service only while that process remains running.

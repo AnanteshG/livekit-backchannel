@@ -28,44 +28,6 @@ document.querySelectorAll("[data-view]").forEach((link) => {
   };
 });
 showSection("approach");
-const races = {
-  pending: {
-    steps: [
-      "The policy selects an acknowledgement and starts one preparation task.",
-      "The user stops. Cancellation advances the generation counter and cancels that task.",
-      "Even if the provider ignores cancellation and returns audio later, the generation check rejects it.",
-    ],
-    outcome:
-      "Expected invariant: stale prepared audio never reaches the outgoing queue.",
-  },
-  playing: {
-    steps: [
-      "Acknowledgement PCM is already being submitted on its separate audio track.",
-      "The agent begins a normal answer. Its busy state cancels the acknowledgement and clears the local queue.",
-      "The response proceeds independently. PCM already transmitted or buffered at the receiver cannot be recalled.",
-    ],
-    outcome:
-      "Expected invariant: no new acknowledgement is queued behind the answer; already-delivered audio remains a limitation.",
-  },
-  slow: {
-    steps: [
-      "A provider takes too long or raises an error while preparing an acknowledgement.",
-      "Preparation has a 650 ms timeout. Failure ends the attempt and clears the audio sink.",
-      "The 4.5 second attempt cooldown prevents a rapid retry loop. The normal response path does not wait.",
-    ],
-    outcome:
-      "Expected invariant: one pending task at most, with bounded preparation and retry frequency.",
-  },
-};
-function renderRace() {
-  const race = races[$("raceCase").value];
-  $("raceSteps").replaceChildren(
-    ...race.steps.map((step) => element("li", step)),
-  );
-  $("raceOutcome").textContent = race.outcome;
-}
-$("raceCase").onchange = renderRace;
-renderRace();
 function log(text) {
   const item = element("li");
   item.append(
@@ -151,11 +113,13 @@ $("connect").onclick = async () => {
       "Microphone connected. Wait for the agent to be ready, then speak.";
     log("Microphone connected; waiting for worker");
     if (!workerReady)
-      readyTimer = setTimeout(() => {
+      readyTimer = setTimeout(async () => {
         if (room && !workerReady) {
+          await room.disconnect();
+          resetLive("Agent offline");
           $("liveHelp").textContent =
-            "No worker ready signal within 60 seconds. Check worker startup and credentials.";
-          log("Worker readiness timed out");
+            "The website is online, but the voice worker is unavailable. Start the worker, then try again.";
+          log("Worker unavailable. Microphone disconnected; you can retry.");
         }
       }, 60000);
   } catch (error) {
