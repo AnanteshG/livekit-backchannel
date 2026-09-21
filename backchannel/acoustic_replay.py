@@ -14,6 +14,9 @@ from .replay import replay
 
 
 def summary(runs):
+    def p(values, q):
+        return percentile([value for value in values if value is not None], q)
+
     pairs = {}
     for run in runs:
         if run['status'] == 'ok' and not run['warmup']:
@@ -24,18 +27,20 @@ def summary(runs):
         selected = [pair[enabled] for pair in complete]
         response = [run['metrics']['response_ms'] for run in selected]
         report[label] = {
-            'response_p50_ms': percentile(response, 50),
-            'response_p95_ms': percentile(response, 95),
-            'eot_p50_ms': percentile([run['metrics']['eot_ms'] for run in selected], 50),
-            'llm_ttft_p50_ms': percentile([run['metrics']['llm_ttft_ms'] for run in selected], 50),
-            'tts_first_p50_ms': percentile([run['metrics']['tts_first_ms'] for run in selected], 50),
+            'response_p50_ms': p(response, .5),
+            'response_p95_ms': p(response, .95),
+            'eot_p50_ms': p([run['metrics']['eot_ms'] for run in selected], .5),
+            'llm_ttft_p50_ms': p(
+                [run['metrics']['llm_ttft_ms'] for run in selected], .5),
+            'tts_first_p50_ms': p(
+                [run['metrics']['tts_first_ms'] for run in selected], .5),
         }
         if enabled:
             metrics = [run['acoustic_metrics'] for run in selected]
-            report[label]['acoustic_inference_p50_ms'] = percentile(
-                [m['inference_p50_ms'] for m in metrics], 50)
-            report[label]['acoustic_ui_p50_ms'] = percentile(
-                [m['signal_to_receiver_p50_ms'] for m in metrics], 50)
+            report[label]['acoustic_inference_p50_ms'] = p(
+                [m['inference_p50_ms'] for m in metrics], .5)
+            report[label]['acoustic_ui_p50_ms'] = p(
+                [m['signal_to_receiver_p50_ms'] for m in metrics], .5)
     deltas = [pair[True]['metrics']['response_ms'] - pair[False]['metrics']['response_ms']
               for pair in complete]
     report['paired_response_mean_delta_ms'] = float(np.mean(deltas)) if deltas else None

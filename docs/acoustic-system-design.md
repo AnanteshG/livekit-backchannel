@@ -48,6 +48,8 @@ For “Yeah, that's great.” the text baseline is identical for both deliveries
 
 Live replay aligns worker and receiver monotonic clocks. Predictions record inference, audio accumulation and worker-to-receiver transport. `python -m backchannel.acoustic_replay --repeats 2` pairs acoustic OFF/ON on identical WAVs and reports response P50/P95, EOT, LLM TTFT, TTS first audio and acoustic transport. Hardware speaker/display latency remains outside measurement.
 
+The committed LiveKit Cloud run contains six complete pairs and twelve successful calls across long, fast and noisy speech. Acoustic OFF/ON response P50 was **3,360.6/3,671.4 ms**, P95 was **3,770.4/4,040.0 ms**, and the paired mean delta was **+299.1 ms**. ON runs measured acoustic inference **0.76 ms P50** and worker-to-receiver transport **123.8 ms P50**. The response delta exceeds the proposed 30 ms production gate. With only two repetitions per scenario on shared providers, it is a regression signal to investigate rather than evidence that the non-blocking analyzer caused the difference; production promotion requires at least 20 randomized pairs per scenario and stage-level comparison. Raw events and failures are retained in `results/acoustic-livekit.json`.
+
 ## Per-call state
 
 Ephemeral worker memory holds the 48 KB audio ring, one waiting window, EMA vector, confidence, latest window ID, counters, expression history, turn state, cooldown and pending acknowledgement. It is safe to lose: a replacement starts neutral and rebuilds acoustic context within 1.5 seconds. Durable conversation history and tenant config remain in their existing services. Call-end cleanup cancels tasks and releases buffers. This component persists no raw audio.
