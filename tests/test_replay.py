@@ -3,6 +3,7 @@ import asyncio
 import pytest
 
 from backchannel.benchmark import scenarios, simulate, verify_audio
+from backchannel.replay import acoustic_metrics
 
 
 def test_eight_verified_pcm_recordings():
@@ -35,3 +36,15 @@ async def test_short_and_noisy_inputs_do_not_backchannel():
             run = await simulate(spec, True, 41, 'p')
             assert run['metrics']['backchannels'] == 0
 
+
+def test_acoustic_metrics_use_fractional_percentiles_and_allow_no_events():
+    events = [
+        {'kind': 'acoustic_prediction', 'inference_ms': value,
+         'effective_latency_ms': value + 100, 'ui_transport_ms': value + 10}
+        for value in (1, 2, 3, 4)
+    ]
+    metrics = acoustic_metrics(events)
+    assert metrics['predictions'] == 4
+    assert metrics['inference_p50_ms'] == 2.5
+    assert metrics['inference_p95_ms'] == pytest.approx(3.85)
+    assert acoustic_metrics([])['inference_p95_ms'] is None

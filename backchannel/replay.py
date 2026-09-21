@@ -21,6 +21,30 @@ REQUIRED = ('LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET',
             'DEEPGRAM_API_KEY', 'OPENAI_API_KEY')
 
 
+def acoustic_metrics(events):
+    acoustic_events = [event for event in events
+                       if event['kind'] == 'acoustic_prediction']
+    ui_times = [event['ui_transport_ms'] for event in acoustic_events
+                if 'ui_transport_ms' in event]
+
+    def optional(values, q):
+        return percentile(values, q) if values else None
+
+    return {
+        'predictions': len(acoustic_events),
+        'inference_p50_ms': optional(
+            [event['inference_ms'] for event in acoustic_events], .5),
+        'inference_p95_ms': optional(
+            [event['inference_ms'] for event in acoustic_events], .95),
+        'audio_to_signal_p50_ms': optional(
+            [event['effective_latency_ms'] for event in acoustic_events], .5),
+        'audio_to_signal_p95_ms': optional(
+            [event['effective_latency_ms'] for event in acoustic_events], .95),
+        'signal_to_receiver_p50_ms': optional(ui_times, .5),
+        'signal_to_receiver_p95_ms': optional(ui_times, .95),
+    }
+
+
 def missing_credentials():
     return [key for key in REQUIRED if not os.getenv(key)]
 
@@ -195,23 +219,7 @@ async def replay(spec, enabled, pair_id, warmup=False, acoustic_enabled=True):
               'max_input_schedule_lag_ms': max_schedule_lag * 1000,
               'telemetry_dropped': telemetry_dropped,
               'metrics': run_metrics(events, spec['speech_end'])}
-    acoustic_events = [e for e in events if e['kind'] == 'acoustic_prediction']
-    ui_times = [e['ui_transport_ms'] for e in acoustic_events if 'ui_transport_ms' in e]
-    def optional_percentile(values, q):
-        return percentile(values, q) if values else None
-    result['acoustic_metrics'] = {
-        'predictions': len(acoustic_events),
-        'inference_p50_ms': optional_percentile(
-            [e['inference_ms'] for e in acoustic_events], 50),
-        'inference_p95_ms': optional_percentile(
-            [e['inference_ms'] for e in acoustic_events], 95),
-        'audio_to_signal_p50_ms': optional_percentile(
-            [e['effective_latency_ms'] for e in acoustic_events], 50),
-        'audio_to_signal_p95_ms': optional_percentile(
-            [e['effective_latency_ms'] for e in acoustic_events], 95),
-        'signal_to_receiver_p50_ms': optional_percentile(ui_times, 50),
-        'signal_to_receiver_p95_ms': optional_percentile(ui_times, 95),
-    }
+    result['acoustic_metrics'] = acoustic_metrics(events)
     if telemetry_dropped or result['metrics']['response_ms'] is None:
         result['status'] = 'failed'
         result['error'] = result['error'] or 'Dropped telemetry or missing response audio'
