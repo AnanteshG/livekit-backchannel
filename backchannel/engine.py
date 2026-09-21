@@ -44,6 +44,9 @@ class BackchannelEngine:
         self.count = 0
         self.task = None
         self.sequence = 0
+        self.acoustic_frustration = 0.0
+        self.acoustic_uncertainty = 0.0
+        self.acoustic_confidence = 0.0
 
     def user_started(self):
         if self.closed or self.speaking:
@@ -98,11 +101,27 @@ class BackchannelEngine:
             self.cancel('disabled')
         self.timeline.emit('mode', enabled=enabled)
 
+    def acoustic_state(self, frustration, confidence, uncertainty=0.0):
+        self.acoustic_frustration = frustration
+        self.acoustic_uncertainty = uncertainty
+        self.acoustic_confidence = confidence
+        self.timeline.emit('acoustic_policy', high_frustration=self.high_frustration,
+                           cooldown_multiplier=self.cooldown_multiplier)
+
+    @property
+    def high_frustration(self):
+        return (self.acoustic_confidence >= 0.45 and self.acoustic_frustration >= 0.82
+                and self.acoustic_uncertainty >= 0.45)
+
+    @property
+    def cooldown_multiplier(self):
+        return 1.75 if self.high_frustration else 1.0
+
     def eligible(self):
         now, p = self.clock(), self.policy
         return (not self.closed and self.enabled and self.speaking and not self.agent_busy
                 and now - self.speech_started >= p.min_speech
-                and now - self.last_attempt >= p.cooldown
+                and now - self.last_attempt >= p.cooldown * self.cooldown_multiplier
                 and now - self.transcript_at <= p.transcript_ttl
                 and len(self.text.split()) >= p.min_words
                 and self.eot_risk < p.max_eot_risk and self.count < p.max_per_turn)

@@ -46,6 +46,7 @@ def scenarios():
 
 class ConnectRequest(BaseModel):
     enabled: bool = True
+    acoustic_enabled: bool = True
 
 
 @app.post('/api/connect')
@@ -79,7 +80,8 @@ def connect(body: ConnectRequest, request: Request, x_demo_key: str = Header(def
            .with_ttl(timedelta(minutes=15))
            .with_grants(api.VideoGrants(room_join=True, room=room))
            .with_room_config(api.RoomConfiguration(agents=[api.RoomAgentDispatch(
-               agent_name='backchannel-lab', metadata=json.dumps({'enabled': body.enabled}))]))
+               agent_name='backchannel-lab', metadata=json.dumps({
+                   'enabled': body.enabled, 'acoustic_enabled': body.acoustic_enabled}))]))
            .to_jwt())
     return {'url': os.environ['LIVEKIT_URL'], 'token': jwt, 'room': room}
 

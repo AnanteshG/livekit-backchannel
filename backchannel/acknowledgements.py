@@ -11,7 +11,9 @@ class Acknowledgements:
         self.clips = {name: pcm(ROOT / f'scenarios/audio/{name}.wav') for name in ORDER}
         self.index = 0
 
-    def next_clip(self):
+    def next_clip(self, allow_verbal=True):
         name = ORDER[self.index % len(ORDER)]
         self.index += 1
+        if not allow_verbal and name == 'go-on':
+            name = 'listening'
         return LABELS[name], self.clips[name]

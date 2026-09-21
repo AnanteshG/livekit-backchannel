@@ -1,0 +1,1367 @@
+{
+  "schema_version": 1,
+  "model": "prosody-dsp-v1",
+  "audio_only": true,
+  "window_seconds": 1.5,
+  "minimum_seconds": 0.75,
+  "stride_seconds": 0.25,
+  "smoothing_ema_alpha": 0.35,
+  "repeats": 5,
+  "inference_p50_ms": 0.30450000031123636,
+  "inference_p95_ms": 0.6566499994733023,
+  "earliest_signal_ms": 750,
+  "same_words_comparison": {
+    "text_baseline_equal": true,
+    "acoustic_frustration_delta": 0.039043978423330294,
+    "acoustic_energy_delta": 0.05352516315649636
+  },
+  "limitations": [
+    "Synthetic voices test repeatability, not accuracy on natural human speech.",
+    "DSP scores are uncalibrated acoustic cues, not emotion probabilities.",
+    "Effective detection latency is at least the audio accumulated plus inference time."
+  ],
+  "runs": [
+    {
+      "id": "same_positive",
+      "text": "Yeah, that's great.",
+      "delivery": "Sound genuinely pleased, warm and confident.",
+      "duration_seconds": 2.35,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.7165885123941633,
+          "uncertainty": 0.6031571429559629,
+          "energy": 0.8661893010139465,
+          "confidence": 0.23483365949119375,
+          "inference_ms": 1.1284000001978711
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.7446993208311172,
+          "uncertainty": 0.5766689611876314,
+          "energy": 0.8766597092151642,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.49529999978403794
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7629421490604408,
+          "uncertainty": 0.5886524679380334,
+          "energy": 0.8649837431311607,
+          "confidence": 0.7742934572202865,
+          "inference_ms": 0.4664000007323921
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.7752963586120474,
+          "uncertainty": 0.59500840123422,
+          "energy": 0.8596157319396733,
+          "confidence": 0.9073359073359073,
+          "inference_ms": 0.5618999994112528
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7854677580328715,
+          "uncertainty": 0.5780019342386631,
+          "energy": 0.8409803377173841,
+          "confidence": 1.0,
+          "inference_ms": 0.891800000317744
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7872535535016184,
+          "uncertainty": 0.5292592909389465,
+          "energy": 0.8331488463559374,
+          "confidence": 1.0,
+          "inference_ms": 0.685699999849021
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7878608761635464,
+          "uncertainty": 0.5152752946073198,
+          "energy": 0.8096000731618311,
+          "confidence": 1.0,
+          "inference_ms": 0.3955000001951703
+        }
+      ],
+      "final": {
+        "at_seconds": 2.25,
+        "frustration": 0.7878608761635464,
+        "uncertainty": 0.5152752946073198,
+        "energy": 0.8096000731618311,
+        "confidence": 1.0,
+        "inference_ms": 0.3955000001951703
+      },
+      "text_baseline": {
+        "positive": 0.6903985389889412,
+        "negative": 0.3096014610110588
+      },
+      "inference_p50_ms": 0.3753000000870088,
+      "inference_p95_ms": 0.8857099997840123
+    },
+    {
+      "id": "same_frustrated",
+      "text": "Yeah, that's great.",
+      "delivery": "Sound clearly frustrated and skeptical, with tense energetic delivery.",
+      "duration_seconds": 2.4,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.74352576847662,
+          "uncertainty": 0.5760655186437581,
+          "energy": 0.94903165102005,
+          "confidence": 0.07827788649706457,
+          "inference_ms": 0.4201000001557986
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.7761764141608929,
+          "uncertainty": 0.5801524044172639,
+          "energy": 0.9454457879066467,
+          "confidence": 0.5636540330417881,
+          "inference_ms": 0.28590000056283316
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7974252203276836,
+          "uncertainty": 0.6014001460042095,
+          "energy": 0.9345646727085113,
+          "confidence": 0.580720092915215,
+          "inference_ms": 0.37509999947360484
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.8078749406691332,
+          "uncertainty": 0.6224484148770684,
+          "energy": 0.9215547500252723,
+          "confidence": 0.6177606177606179,
+          "inference_ms": 0.3378999999767984
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.8213892514200656,
+          "uncertainty": 0.6122270866072936,
+          "energy": 0.8986594267517327,
+          "confidence": 1.0,
+          "inference_ms": 0.6577000003744615
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.8245545349731437,
+          "uncertainty": 0.5729606591996689,
+          "energy": 0.88866851648584,
+          "confidence": 1.0,
+          "inference_ms": 0.6102999996073777
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.8269048545868767,
+          "uncertainty": 0.5533186418292173,
+          "energy": 0.8631252363183275,
+          "confidence": 1.0,
+          "inference_ms": 0.3827999998975429
+        }
+      ],
+      "final": {
+        "at_seconds": 2.25,
+        "frustration": 0.8269048545868767,
+        "uncertainty": 0.5533186418292173,
+        "energy": 0.8631252363183275,
+        "confidence": 1.0,
+        "inference_ms": 0.3827999998975429
+      },
+      "text_baseline": {
+        "positive": 0.6903985389889412,
+        "negative": 0.3096014610110588
+      },
+      "inference_p50_ms": 0.29350000022532186,
+      "inference_p95_ms": 0.6201399997735279
+    },
+    {
+      "id": "background_noise",
+      "text": "Yeah, that's great.",
+      "delivery": "Sound clearly frustrated and skeptical, with tense energetic delivery. Seeded background noise.",
+      "duration_seconds": 2.4,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.5370994468530018,
+          "uncertainty": 0.16215927004814146,
+          "energy": 0.547552764415741,
+          "confidence": 0.5,
+          "inference_ms": 0.3083000001424807
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.5883184456825256,
+          "uncertainty": 0.19244571590423581,
+          "energy": 0.5853918313980102,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.3158999998049694
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.6117484808564185,
+          "uncertainty": 0.20850681105852126,
+          "energy": 0.6009072440862655,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.39959999958227854
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.6206481038918097,
+          "uncertainty": 0.21596212883532045,
+          "energy": 0.6056992089450359,
+          "confidence": 1.0,
+          "inference_ms": 0.8901999999579857
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.6448243616624176,
+          "uncertainty": 0.22587026942601798,
+          "energy": 0.6271270512744784,
+          "confidence": 1.0,
+          "inference_ms": 0.4288000000087777
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.6777261974505856,
+          "uncertainty": 0.23313984839856772,
+          "energy": 0.6613410144530982,
+          "confidence": 1.0,
+          "inference_ms": 0.27460000001156004
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.6943495557069757,
+          "uncertainty": 0.23678230837664105,
+          "energy": 0.6786520529949778,
+          "confidence": 1.0,
+          "inference_ms": 0.260399999206129
+        }
+      ],
+      "final": {
+        "at_seconds": 2.25,
+        "frustration": 0.6943495557069757,
+        "uncertainty": 0.23678230837664105,
+        "energy": 0.6786520529949778,
+        "confidence": 1.0,
+        "inference_ms": 0.260399999206129
+      },
+      "text_baseline": {
+        "positive": 0.6903985389889412,
+        "negative": 0.3096014610110588
+      },
+      "inference_p50_ms": 0.2812000002450077,
+      "inference_p95_ms": 0.6453599998167191
+    },
+    {
+      "id": "increasing_frustration",
+      "text": "I reported this once, then twice, and I am still waiting for a useful answer.",
+      "delivery": "Begin calm, become progressively more frustrated and emphatic toward the end.",
+      "duration_seconds": 6.75,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.0,
+          "uncertainty": 0.7,
+          "energy": 0.0,
+          "confidence": 0.0,
+          "inference_ms": 0.9778000003279885
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.0,
+          "uncertainty": 0.7,
+          "energy": 0.0,
+          "confidence": 0.0,
+          "inference_ms": 0.7813000001988257
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.2823207503766344,
+          "uncertainty": 0.6294919567587899,
+          "energy": 0.35,
+          "confidence": 0.46457607433217196,
+          "inference_ms": 0.3587000001061824
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.47130277106525054,
+          "uncertainty": 0.5854330902723965,
+          "energy": 0.5720997387170792,
+          "confidence": 0.888030888030888,
+          "inference_ms": 0.31690000014350517
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.5878103813215134,
+          "uncertainty": 0.5327552118761995,
+          "energy": 0.6949403362572193,
+          "confidence": 1.0,
+          "inference_ms": 0.29989999984536553
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.666313086017102,
+          "uncertainty": 0.475521758190337,
+          "energy": 0.7711559673264623,
+          "confidence": 1.0,
+          "inference_ms": 0.2844000000550295
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7268255844132945,
+          "uncertainty": 0.40632032357053216,
+          "energy": 0.8169297278995067,
+          "confidence": 1.0,
+          "inference_ms": 0.2612000007502502
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7665772287419388,
+          "uncertainty": 0.3645113825770192,
+          "energy": 0.8436144278147407,
+          "confidence": 1.0,
+          "inference_ms": 0.27009999939764384
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.7865229939859228,
+          "uncertainty": 0.33675577701890236,
+          "energy": 0.8552442943755867,
+          "confidence": 1.0,
+          "inference_ms": 0.26819999948202167
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.7928144717252976,
+          "uncertainty": 0.3230984205258372,
+          "energy": 0.8491019587921752,
+          "confidence": 1.0,
+          "inference_ms": 0.25800000003073364
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.7925097180032603,
+          "uncertainty": 0.319125074058965,
+          "energy": 0.8357637035633101,
+          "confidence": 1.0,
+          "inference_ms": 0.30789999982516747
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.7820875720387217,
+          "uncertainty": 0.3396197796705659,
+          "energy": 0.8148592035035525,
+          "confidence": 1.0,
+          "inference_ms": 0.535199999831093
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.7738698697620219,
+          "uncertainty": 0.3845190457537402,
+          "energy": 0.7988327213167302,
+          "confidence": 1.0,
+          "inference_ms": 0.6471999995483202
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.7690166762219697,
+          "uncertainty": 0.41522819128507116,
+          "energy": 0.7887712611978699,
+          "confidence": 1.0,
+          "inference_ms": 0.3865999997287872
+        },
+        {
+          "at_seconds": 4.25,
+          "frustration": 0.740027774570926,
+          "uncertainty": 0.4559649863166082,
+          "energy": 0.7518311462051215,
+          "confidence": 1.0,
+          "inference_ms": 0.2810000005410984
+        },
+        {
+          "at_seconds": 4.5,
+          "frustration": 0.7486112830828165,
+          "uncertainty": 0.475265445332418,
+          "energy": 0.7661031364212685,
+          "confidence": 1.0,
+          "inference_ms": 0.314799999614479
+        },
+        {
+          "at_seconds": 4.75,
+          "frustration": 0.769615985509142,
+          "uncertainty": 0.46676282996254986,
+          "energy": 0.8113035451597636,
+          "confidence": 1.0,
+          "inference_ms": 0.28109999948355835
+        },
+        {
+          "at_seconds": 5.0,
+          "frustration": 0.789750907035321,
+          "uncertainty": 0.4321524408576036,
+          "energy": 0.854237755069865,
+          "confidence": 1.0,
+          "inference_ms": 0.26109999998880085
+        },
+        {
+          "at_seconds": 5.25,
+          "frustration": 0.8034875868634109,
+          "uncertainty": 0.3762545154544881,
+          "energy": 0.8850973496380712,
+          "confidence": 1.0,
+          "inference_ms": 0.2736999995249789
+        },
+        {
+          "at_seconds": 5.5,
+          "frustration": 0.8133050964543443,
+          "uncertainty": 0.33403445828760736,
+          "energy": 0.8870307964288315,
+          "confidence": 1.0,
+          "inference_ms": 0.27890000001207227
+        },
+        {
+          "at_seconds": 5.75,
+          "frustration": 0.8135934718886016,
+          "uncertainty": 0.28536965449295654,
+          "energy": 0.882375852806571,
+          "confidence": 1.0,
+          "inference_ms": 0.26000000070780516
+        },
+        {
+          "at_seconds": 6.0,
+          "frustration": 0.8106264866873969,
+          "uncertainty": 0.2560056859919067,
+          "energy": 0.8733974205981512,
+          "confidence": 1.0,
+          "inference_ms": 0.2547999993112171
+        },
+        {
+          "at_seconds": 6.25,
+          "frustration": 0.8003858048100558,
+          "uncertainty": 0.2527363311830423,
+          "energy": 0.8542706857020688,
+          "confidence": 1.0,
+          "inference_ms": 0.4191999996692175
+        },
+        {
+          "at_seconds": 6.5,
+          "frustration": 0.782147592852773,
+          "uncertainty": 0.2486120901370302,
+          "energy": 0.8183780956697236,
+          "confidence": 1.0,
+          "inference_ms": 0.5606000004263478
+        },
+        {
+          "at_seconds": 6.75,
+          "frustration": 0.7561832724587819,
+          "uncertainty": 0.2753987360796288,
+          "energy": 0.7691368134300561,
+          "confidence": 1.0,
+          "inference_ms": 0.4957000001013512
+        }
+      ],
+      "final": {
+        "at_seconds": 6.75,
+        "frustration": 0.7561832724587819,
+        "uncertainty": 0.2753987360796288,
+        "energy": 0.7691368134300561,
+        "confidence": 1.0,
+        "inference_ms": 0.4957000001013512
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.27630000022327295,
+      "inference_p95_ms": 0.6093999996664934
+    },
+    {
+      "id": "hesitant",
+      "text": "I think we could possibly try the second option, if that makes sense.",
+      "delivery": "Sound hesitant and uncertain, with uneven pacing, fillers and short pauses.",
+      "duration_seconds": 4.3,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.7155113665148036,
+          "uncertainty": 0.40796768841678144,
+          "energy": 0.7108991146087646,
+          "confidence": 0.5,
+          "inference_ms": 0.40970000009110663
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.7067878270184174,
+          "uncertainty": 0.4005810539946397,
+          "energy": 0.7054012417793274,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.28190000011818483
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7145087972902122,
+          "uncertainty": 0.38135063050173157,
+          "energy": 0.7122696191072464,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.3904000004695263
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.7228944208632966,
+          "uncertainty": 0.35830726282646996,
+          "energy": 0.7240431644022465,
+          "confidence": 1.0,
+          "inference_ms": 0.6576999994649668
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7300343968636978,
+          "uncertainty": 0.33160339875083256,
+          "energy": 0.734173578955233,
+          "confidence": 1.0,
+          "inference_ms": 0.540500000170141
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7338627606929276,
+          "uncertainty": 0.2980952702303242,
+          "energy": 0.7509131619427353,
+          "confidence": 1.0,
+          "inference_ms": 0.3464999999778229
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7399594995077059,
+          "uncertainty": 0.2644640399563024,
+          "energy": 0.7678161415369249,
+          "confidence": 1.0,
+          "inference_ms": 0.2857999998013838
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7445858538401269,
+          "uncertainty": 0.2375770231937031,
+          "energy": 0.7826991746219107,
+          "confidence": 1.0,
+          "inference_ms": 0.25969999933295185
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.744620548801014,
+          "uncertainty": 0.226815509609152,
+          "energy": 0.7872879579767457,
+          "confidence": 1.0,
+          "inference_ms": 0.2573000001575565
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.7357781418419411,
+          "uncertainty": 0.2202943752787416,
+          "energy": 0.7770749379017121,
+          "confidence": 1.0,
+          "inference_ms": 0.2875000000130967
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.7266697450843199,
+          "uncertainty": 0.24426845091445706,
+          "energy": 0.7663955988220184,
+          "confidence": 1.0,
+          "inference_ms": 0.2761000005193637
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.719938587033588,
+          "uncertainty": 0.27320720731825876,
+          "energy": 0.752606053762205,
+          "confidence": 1.0,
+          "inference_ms": 0.2626000004966045
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.6978821333989913,
+          "uncertainty": 0.2903753835477406,
+          "energy": 0.735093442348807,
+          "confidence": 1.0,
+          "inference_ms": 0.30450000031123636
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.688526447503221,
+          "uncertainty": 0.29763293635081944,
+          "energy": 0.7172796279552677,
+          "confidence": 1.0,
+          "inference_ms": 0.26330000036978163
+        },
+        {
+          "at_seconds": 4.25,
+          "frustration": 0.6741137268419005,
+          "uncertainty": 0.30855333967953175,
+          "energy": 0.6914969481762264,
+          "confidence": 1.0,
+          "inference_ms": 0.41090000013355166
+        }
+      ],
+      "final": {
+        "at_seconds": 4.25,
+        "frustration": 0.6741137268419005,
+        "uncertainty": 0.30855333967953175,
+        "energy": 0.6914969481762264,
+        "confidence": 1.0,
+        "inference_ms": 0.41090000013355166
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.2894000008382136,
+      "inference_p95_ms": 0.5516600000191828
+    },
+    {
+      "id": "high_energy",
+      "text": "This is exciting, we can launch the new workflow today.",
+      "delivery": "Speak quickly with high energy and excitement.",
+      "duration_seconds": 4.25,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.7548808872699737,
+          "uncertainty": 0.244050189224008,
+          "energy": 0.7755183577537537,
+          "confidence": 0.5,
+          "inference_ms": 0.5823000001328182
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.7483836598197618,
+          "uncertainty": 0.24171049016294177,
+          "energy": 0.766911706328392,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.37820000034116674
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7379181900173425,
+          "uncertainty": 0.2688115780383675,
+          "energy": 0.7445394413173199,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.2964000004794798
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.7320568847713371,
+          "uncertainty": 0.3054716500778709,
+          "energy": 0.7310002039596438,
+          "confidence": 1.0,
+          "inference_ms": 0.33399999938410474
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7319118030108387,
+          "uncertainty": 0.32814592873462184,
+          "energy": 0.7276077632080764,
+          "confidence": 1.0,
+          "inference_ms": 0.26220000017929124
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7475131052708,
+          "uncertainty": 0.34381463898666426,
+          "energy": 0.7489114132107608,
+          "confidence": 1.0,
+          "inference_ms": 0.256700000136334
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7562795994294859,
+          "uncertainty": 0.35571851359332407,
+          "energy": 0.7680455180285228,
+          "confidence": 1.0,
+          "inference_ms": 0.2762000003713183
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7767173926396567,
+          "uncertainty": 0.3520816466711452,
+          "energy": 0.8104282355289265,
+          "confidence": 1.0,
+          "inference_ms": 0.2717000006668968
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.7903295201714831,
+          "uncertainty": 0.30422050977541226,
+          "energy": 0.8621986427294606,
+          "confidence": 1.0,
+          "inference_ms": 0.2618000007714727
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.8079946345585152,
+          "uncertainty": 0.2832221279537025,
+          "energy": 0.8753632910005058,
+          "confidence": 1.0,
+          "inference_ms": 0.2565000004324247
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.8203219571902782,
+          "uncertainty": 0.2670170402408398,
+          "energy": 0.8881576214749289,
+          "confidence": 1.0,
+          "inference_ms": 0.37309999970602803
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.822263234499091,
+          "uncertainty": 0.26489641221990506,
+          "energy": 0.8788268785116213,
+          "confidence": 1.0,
+          "inference_ms": 0.37770000017189886
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.8125755276356538,
+          "uncertainty": 0.279118791555703,
+          "energy": 0.8617807113413154,
+          "confidence": 1.0,
+          "inference_ms": 0.3707000005306327
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.8007805450491973,
+          "uncertainty": 0.3243566468727195,
+          "energy": 0.8341628366842558,
+          "confidence": 1.0,
+          "inference_ms": 0.3850999992209836
+        },
+        {
+          "at_seconds": 4.25,
+          "frustration": 0.7824365996744598,
+          "uncertainty": 0.3893378881556684,
+          "energy": 0.7920267318872163,
+          "confidence": 1.0,
+          "inference_ms": 0.3411999996387749
+        }
+      ],
+      "final": {
+        "at_seconds": 4.25,
+        "frustration": 0.7824365996744598,
+        "uncertainty": 0.3893378881556684,
+        "energy": 0.7920267318872163,
+        "confidence": 1.0,
+        "inference_ms": 0.3411999996387749
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.30470000001514563,
+      "inference_p95_ms": 0.5010400007449789
+    },
+    {
+      "id": "flat",
+      "text": "The update is complete and the report is ready.",
+      "delivery": "Use flat, low-energy, disengaged delivery with little pitch variation.",
+      "duration_seconds": 4.2,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.8022353032806463,
+          "uncertainty": 0.3843797841953905,
+          "energy": 0.8938111662864685,
+          "confidence": 0.5,
+          "inference_ms": 0.35519999983080197
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.8022353032806462,
+          "uncertainty": 0.416180175584823,
+          "energy": 0.8938111662864685,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.25490000007266644
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.8068976307218534,
+          "uncertainty": 0.4286834242505392,
+          "energy": 0.8981501549482346,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.2577999994173297
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.8054100950775163,
+          "uncertainty": 0.4353440475169323,
+          "energy": 0.8851748882234096,
+          "confidence": 1.0,
+          "inference_ms": 0.28199999997013947
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7938553737208588,
+          "uncertainty": 0.44811753327317394,
+          "energy": 0.8515183832272888,
+          "confidence": 1.0,
+          "inference_ms": 0.2694000004339614
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7817419359055933,
+          "uncertainty": 0.4619405608565823,
+          "energy": 0.8116303949471564,
+          "confidence": 1.0,
+          "inference_ms": 0.2616000001580687
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7706840306350642,
+          "uncertainty": 0.49016396303286625,
+          "energy": 0.7778723741368019,
+          "confidence": 1.0,
+          "inference_ms": 0.35799999932351056
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7706914416477084,
+          "uncertainty": 0.4879699279205264,
+          "energy": 0.7690397737539922,
+          "confidence": 1.0,
+          "inference_ms": 0.49760000001697335
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.7653175431424188,
+          "uncertainty": 0.4790236177324633,
+          "energy": 0.7684322123503808,
+          "confidence": 1.0,
+          "inference_ms": 0.5344999999579159
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.774391342729734,
+          "uncertainty": 0.4694788302317909,
+          "energy": 0.7855623355611643,
+          "confidence": 1.0,
+          "inference_ms": 0.32909999936237
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.786312765030842,
+          "uncertainty": 0.48497002481534257,
+          "energy": 0.806988247654628,
+          "confidence": 1.0,
+          "inference_ms": 0.2714000002015382
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.7901450150705618,
+          "uncertainty": 0.47058392158303597,
+          "energy": 0.8374654526255174,
+          "confidence": 1.0,
+          "inference_ms": 0.3004000000146334
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.7870031500433861,
+          "uncertainty": 0.4248264975089351,
+          "energy": 0.8565926262321142,
+          "confidence": 1.0,
+          "inference_ms": 0.27490000047691865
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.7749489106442147,
+          "uncertainty": 0.4030984669200509,
+          "energy": 0.8520110478578352,
+          "confidence": 1.0,
+          "inference_ms": 0.2580999998826883
+        }
+      ],
+      "final": {
+        "at_seconds": 4.0,
+        "frustration": 0.7749489106442147,
+        "uncertainty": 0.4030984669200509,
+        "energy": 0.8520110478578352,
+        "confidence": 1.0,
+        "inference_ms": 0.2580999998826883
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.27420000014899415,
+      "inference_p95_ms": 0.5178949999844916
+    },
+    {
+      "id": "long_change",
+      "text": "Let me explain the situation from the beginning. The first step worked, the next step failed twice, and now I need a clear solution before the deadline.",
+      "delivery": "Start calm and confident, become hesitant in the middle, then frustrated and emphatic.",
+      "duration_seconds": 9.65,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.7354142870586982,
+          "uncertainty": 0.43008525400945585,
+          "energy": 0.7513216733932495,
+          "confidence": 0.5,
+          "inference_ms": 0.5028000005040667
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.740108943555069,
+          "uncertainty": 0.41757734910452665,
+          "energy": 0.7564323544502258,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.3389000003153342
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7500428892897097,
+          "uncertainty": 0.38903038694296055,
+          "energy": 0.7711140364408493,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.3695999994306476
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.754187473408604,
+          "uncertainty": 0.36353295281601977,
+          "energy": 0.7769782237708569,
+          "confidence": 1.0,
+          "inference_ms": 0.43310000000928994
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7569156397272605,
+          "uncertainty": 0.3115635489352937,
+          "energy": 0.7846144239231944,
+          "confidence": 1.0,
+          "inference_ms": 0.2982000005431473
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7582224158225603,
+          "uncertainty": 0.2759714885370901,
+          "energy": 0.7874828000944107,
+          "confidence": 1.0,
+          "inference_ms": 0.25860000005195616
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.7542705509092962,
+          "uncertainty": 0.25197864524469216,
+          "energy": 0.7865088744017295,
+          "confidence": 1.0,
+          "inference_ms": 0.27210000007471535
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7442621697780762,
+          "uncertainty": 0.22943483532234565,
+          "energy": 0.7812389717483845,
+          "confidence": 1.0,
+          "inference_ms": 0.25719999939610716
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.723613646850554,
+          "uncertainty": 0.24089100211466408,
+          "energy": 0.7674881359825345,
+          "confidence": 1.0,
+          "inference_ms": 0.2690999999686028
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.7055095618647318,
+          "uncertainty": 0.278282151549518,
+          "energy": 0.7567796500105042,
+          "confidence": 1.0,
+          "inference_ms": 0.2672000000529806
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.6794961929820398,
+          "uncertainty": 0.3374351709421559,
+          "energy": 0.733939953101272,
+          "confidence": 1.0,
+          "inference_ms": 0.35819999993691454
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.6819683554051066,
+          "uncertainty": 0.390960378295486,
+          "energy": 0.7108408320389057,
+          "confidence": 1.0,
+          "inference_ms": 0.4156000004513771
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.7068832439661556,
+          "uncertainty": 0.43566453095582236,
+          "energy": 0.7124425213026218,
+          "confidence": 1.0,
+          "inference_ms": 0.589600000239443
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.7356690753114569,
+          "uncertainty": 0.47864566562819744,
+          "energy": 0.7205181595004289,
+          "confidence": 1.0,
+          "inference_ms": 0.40330000047106296
+        },
+        {
+          "at_seconds": 4.25,
+          "frustration": 0.7588784457840547,
+          "uncertainty": 0.48831166494211387,
+          "energy": 0.7331113258606043,
+          "confidence": 1.0,
+          "inference_ms": 0.2976000005219248
+        },
+        {
+          "at_seconds": 4.5,
+          "frustration": 0.770315676236025,
+          "uncertainty": 0.48950471219369845,
+          "energy": 0.7359862442556819,
+          "confidence": 1.0,
+          "inference_ms": 0.26559999969322234
+        },
+        {
+          "at_seconds": 4.75,
+          "frustration": 0.779017514633652,
+          "uncertainty": 0.4957445101387934,
+          "energy": 0.7399572089546393,
+          "confidence": 1.0,
+          "inference_ms": 0.28649999967456097
+        },
+        {
+          "at_seconds": 5.0,
+          "frustration": 0.7909408673851547,
+          "uncertainty": 0.47642092681297754,
+          "energy": 0.7691888959111528,
+          "confidence": 1.0,
+          "inference_ms": 0.2571000004536472
+        },
+        {
+          "at_seconds": 5.25,
+          "frustration": 0.7924368801102795,
+          "uncertainty": 0.47215623927000316,
+          "energy": 0.7748178162262978,
+          "confidence": 1.0,
+          "inference_ms": 0.2578999992692843
+        },
+        {
+          "at_seconds": 5.5,
+          "frustration": 0.7882474017690363,
+          "uncertainty": 0.4836438212751241,
+          "energy": 0.771586019471883,
+          "confidence": 1.0,
+          "inference_ms": 0.2913999996962957
+        },
+        {
+          "at_seconds": 5.75,
+          "frustration": 0.7976879962442301,
+          "uncertainty": 0.483046309632523,
+          "energy": 0.7878763140630121,
+          "confidence": 1.0,
+          "inference_ms": 0.25879999975586543
+        },
+        {
+          "at_seconds": 6.0,
+          "frustration": 0.7941506854993788,
+          "uncertainty": 0.46399739550532626,
+          "energy": 0.78284315267249,
+          "confidence": 1.0,
+          "inference_ms": 0.29040000026725465
+        },
+        {
+          "at_seconds": 6.25,
+          "frustration": 0.7964980463183668,
+          "uncertainty": 0.41780828824771166,
+          "energy": 0.789728872968541,
+          "confidence": 1.0,
+          "inference_ms": 0.2583999994385522
+        },
+        {
+          "at_seconds": 6.5,
+          "frustration": 0.7875287878511237,
+          "uncertainty": 0.40201306401790315,
+          "energy": 0.7778367682754608,
+          "confidence": 1.0,
+          "inference_ms": 0.397799999518611
+        },
+        {
+          "at_seconds": 6.75,
+          "frustration": 0.7804090679882593,
+          "uncertainty": 0.4189032723934216,
+          "energy": 0.7694500928023207,
+          "confidence": 1.0,
+          "inference_ms": 0.4226000000926433
+        },
+        {
+          "at_seconds": 7.0,
+          "frustration": 0.7781361145555086,
+          "uncertainty": 0.42328941215765326,
+          "energy": 0.7722302922789441,
+          "confidence": 1.0,
+          "inference_ms": 0.4546999998638057
+        },
+        {
+          "at_seconds": 7.25,
+          "frustration": 0.7805600434349397,
+          "uncertainty": 0.4212127507887684,
+          "energy": 0.7808018249243222,
+          "confidence": 1.0,
+          "inference_ms": 0.357599999915692
+        },
+        {
+          "at_seconds": 7.5,
+          "frustration": 0.7912121421470415,
+          "uncertainty": 0.3902918822420497,
+          "energy": 0.8184844324271201,
+          "confidence": 1.0,
+          "inference_ms": 0.35429999934422085
+        },
+        {
+          "at_seconds": 7.75,
+          "frustration": 0.7937555509947947,
+          "uncertainty": 0.39883866532217077,
+          "energy": 0.823345230522971,
+          "confidence": 1.0,
+          "inference_ms": 0.2722999997786246
+        },
+        {
+          "at_seconds": 8.0,
+          "frustration": 0.7902021348136414,
+          "uncertainty": 0.3924834101250776,
+          "energy": 0.8408690425029333,
+          "confidence": 1.0,
+          "inference_ms": 0.2696999999898253
+        },
+        {
+          "at_seconds": 8.25,
+          "frustration": 0.7967892405423089,
+          "uncertainty": 0.352149034660321,
+          "energy": 0.8565168148255455,
+          "confidence": 1.0,
+          "inference_ms": 0.25600000026315683
+        },
+        {
+          "at_seconds": 8.5,
+          "frustration": 0.8045634549046057,
+          "uncertainty": 0.305402376199798,
+          "energy": 0.8684541789575884,
+          "confidence": 1.0,
+          "inference_ms": 0.2901999996538507
+        },
+        {
+          "at_seconds": 8.75,
+          "frustration": 0.802454247111561,
+          "uncertainty": 0.2927238696469412,
+          "energy": 0.8587563946967229,
+          "confidence": 1.0,
+          "inference_ms": 0.2561999999670661
+        },
+        {
+          "at_seconds": 9.0,
+          "frustration": 0.8003299818531066,
+          "uncertainty": 0.2859813046739117,
+          "energy": 0.8505693847766707,
+          "confidence": 1.0,
+          "inference_ms": 0.2648999998200452
+        },
+        {
+          "at_seconds": 9.25,
+          "frustration": 0.7964418286054202,
+          "uncertainty": 0.2641350801755422,
+          "energy": 0.8507722788691792,
+          "confidence": 1.0,
+          "inference_ms": 0.25490000007266644
+        },
+        {
+          "at_seconds": 9.5,
+          "frustration": 0.7748690472366283,
+          "uncertainty": 0.2521170557744462,
+          "energy": 0.8291389547652182,
+          "confidence": 1.0,
+          "inference_ms": 0.32950000058917794
+        }
+      ],
+      "final": {
+        "at_seconds": 9.5,
+        "frustration": 0.7748690472366283,
+        "uncertainty": 0.2521170557744462,
+        "energy": 0.8291389547652182,
+        "confidence": 1.0,
+        "inference_ms": 0.32950000058917794
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.2785500000754837,
+      "inference_p95_ms": 0.5084099999294266
+    },
+    {
+      "id": "hinglish",
+      "text": "Mujhe lagta hai yeh approach theek hai, but I am not fully sure yet.",
+      "delivery": "Natural Hindi and English code-switching, thoughtful and somewhat uncertain.",
+      "duration_seconds": 4.9,
+      "trace": [
+        {
+          "at_seconds": 0.75,
+          "frustration": 0.8052178486515772,
+          "uncertainty": 0.24968358146001213,
+          "energy": 0.9757899641990662,
+          "confidence": 0.5,
+          "inference_ms": 0.4970999998477055
+        },
+        {
+          "at_seconds": 1.0,
+          "frustration": 0.8045821825426487,
+          "uncertainty": 0.2723167777574692,
+          "energy": 0.9549923419952392,
+          "confidence": 0.6666666666666666,
+          "inference_ms": 0.2693999995244667
+        },
+        {
+          "at_seconds": 1.25,
+          "frustration": 0.7986876958639075,
+          "uncertainty": 0.27077029538776887,
+          "energy": 0.9432937932014465,
+          "confidence": 0.8333333333333334,
+          "inference_ms": 0.26049999996757833
+        },
+        {
+          "at_seconds": 1.5,
+          "frustration": 0.7904197162496585,
+          "uncertainty": 0.2660659401112487,
+          "energy": 0.9325762223005294,
+          "confidence": 1.0,
+          "inference_ms": 0.3114000001005479
+        },
+        {
+          "at_seconds": 1.75,
+          "frustration": 0.7807128756943009,
+          "uncertainty": 0.25479339864950257,
+          "energy": 0.917328361672163,
+          "confidence": 1.0,
+          "inference_ms": 0.3120000001217704
+        },
+        {
+          "at_seconds": 2.0,
+          "frustration": 0.7751780507586079,
+          "uncertainty": 0.2578931792839626,
+          "energy": 0.8966026898238062,
+          "confidence": 1.0,
+          "inference_ms": 0.26200000047538197
+        },
+        {
+          "at_seconds": 2.25,
+          "frustration": 0.768810786770748,
+          "uncertainty": 0.2657941377038232,
+          "energy": 0.8710920510101765,
+          "confidence": 1.0,
+          "inference_ms": 0.25600000026315683
+        },
+        {
+          "at_seconds": 2.5,
+          "frustration": 0.7593537265449708,
+          "uncertainty": 0.27176545506227406,
+          "energy": 0.838899986278563,
+          "confidence": 1.0,
+          "inference_ms": 0.29549999999289867
+        },
+        {
+          "at_seconds": 2.75,
+          "frustration": 0.7466351624169685,
+          "uncertainty": 0.30910455543943266,
+          "energy": 0.8004814819648931,
+          "confidence": 1.0,
+          "inference_ms": 0.2943999998024083
+        },
+        {
+          "at_seconds": 3.0,
+          "frustration": 0.7423663615687291,
+          "uncertainty": 0.34929034112957946,
+          "energy": 0.7746855868399933,
+          "confidence": 1.0,
+          "inference_ms": 0.3191999994669459
+        },
+        {
+          "at_seconds": 3.25,
+          "frustration": 0.7591815629787022,
+          "uncertainty": 0.37033803530845055,
+          "energy": 0.7811137750521816,
+          "confidence": 1.0,
+          "inference_ms": 0.40270000044984045
+        },
+        {
+          "at_seconds": 3.5,
+          "frustration": 0.7754426572908515,
+          "uncertainty": 0.38169324699579266,
+          "energy": 0.8039433086518533,
+          "confidence": 1.0,
+          "inference_ms": 0.3299999998489511
+        },
+        {
+          "at_seconds": 3.75,
+          "frustration": 0.7933719527461024,
+          "uncertainty": 0.4048928352975907,
+          "energy": 0.8299396992715852,
+          "confidence": 1.0,
+          "inference_ms": 0.2928000003521447
+        },
+        {
+          "at_seconds": 4.0,
+          "frustration": 0.8175899867656754,
+          "uncertainty": 0.39047185035185955,
+          "energy": 0.8884531462833509,
+          "confidence": 1.0,
+          "inference_ms": 0.38640000002487795
+        },
+        {
+          "at_seconds": 4.25,
+          "frustration": 0.8384445149290157,
+          "uncertainty": 0.34896200684004763,
+          "energy": 0.9197371287166473,
+          "confidence": 1.0,
+          "inference_ms": 0.2675000005183392
+        },
+        {
+          "at_seconds": 4.5,
+          "frustration": 0.8454565048644248,
+          "uncertainty": 0.3059814000313385,
+          "energy": 0.935941136276981,
+          "confidence": 1.0,
+          "inference_ms": 0.25660000028437935
+        },
+        {
+          "at_seconds": 4.75,
+          "frustration": 0.847688048609003,
+          "uncertainty": 0.3150428466513536,
+          "energy": 0.9140442397768989,
+          "confidence": 1.0,
+          "inference_ms": 0.3073999996558996
+        }
+      ],
+      "final": {
+        "at_seconds": 4.75,
+        "frustration": 0.847688048609003,
+        "uncertainty": 0.3150428466513536,
+        "energy": 0.9140442397768989,
+        "confidence": 1.0,
+        "inference_ms": 0.3073999996558996
+      },
+      "text_baseline": {
+        "positive": 0.5,
+        "negative": 0.5
+      },
+      "inference_p50_ms": 0.2970000005007023,
+      "inference_p95_ms": 0.5161400000361026
+    }
+  ]
+}

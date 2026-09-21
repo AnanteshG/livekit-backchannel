@@ -10,6 +10,7 @@ requires-python = ">=3.11"
 dependencies = [
   "livekit-agents[deepgram,openai,silero]==1.8.2",
   "fastapi==0.141.1", "uvicorn==0.53.0", "python-dotenv==1.2.3",
+  "numpy>=2.0,<3",
 ]
 
 [project.optional-dependencies]

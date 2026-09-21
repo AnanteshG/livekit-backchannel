@@ -14,7 +14,7 @@ from livekit import api, rtc
 
 from .audio import ROOT, rms
 from .benchmark import scenarios, verify_audio
-from .metrics import run_metrics, summarize
+from .metrics import percentile, run_metrics, summarize
 
 load_dotenv(ROOT / '.env')
 REQUIRED = ('LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET',
@@ -30,7 +30,7 @@ def token(room, identity):
             .with_grants(api.VideoGrants(room_join=True, room=room)).to_jwt())
 
 
-async def replay(spec, enabled, pair_id, warmup=False):
+async def replay(spec, enabled, pair_id, warmup=False, acoustic_enabled=True):
     audio = verify_audio(spec)
     room_name = 'bc-' + uuid.uuid4().hex[:16]
     room = rtc.Room()
@@ -63,7 +63,8 @@ async def replay(spec, enabled, pair_id, warmup=False):
                           event['server_time'] - (event['t0'] + t2) / 2))
             clock_ready.set()
         else:
-            raw_events.append({**event, 'absolute': payload['origin'] + event['t']})
+            raw_events.append({**event, 'absolute': payload['origin'] + event['t'],
+                               'received_absolute': perf_counter()})
             if event['kind'] == 'bc_decision':
                 last_decision = event['decision']
 
@@ -119,7 +120,8 @@ async def replay(spec, enabled, pair_id, warmup=False):
         await room.connect(os.environ['LIVEKIT_URL'], token(room_name, 'replay'))
         await lk.agent_dispatch.create_dispatch(api.CreateAgentDispatchRequest(
             room=room_name, agent_name='backchannel-lab',
-            metadata=json.dumps({'enabled': enabled})))
+            metadata=json.dumps({'enabled': enabled,
+                                 'acoustic_enabled': acoustic_enabled})))
         await asyncio.wait_for(ready.wait(), timeout=60)
         for _ in range(5):
             await room.local_participant.publish_data(
@@ -167,8 +169,13 @@ async def replay(spec, enabled, pair_id, warmup=False):
     if origin is not None:
         events.extend(received)
         if clock_offset is not None:
-            events.extend({k: v for k, v in {**e, 't': e['absolute'] - clock_offset - origin}.items()
-                           if k != 'absolute'} for e in raw_events)
+            for raw in raw_events:
+                mapped = {**raw, 't': raw['absolute'] - clock_offset - origin,
+                          'ui_transport_ms': max(
+                              0, (raw['received_absolute'] -
+                                  (raw['absolute'] - clock_offset)) * 1000)}
+                events.append({k: v for k, v in mapped.items()
+                               if k not in ('absolute', 'received_absolute')})
         for seg in spec['segments']:
             events.extend([{'kind': 'input_speech_start', 't': seg['start']},
                            {'kind': 'input_speech_stop', 't': seg['end']}])
@@ -181,12 +188,26 @@ async def replay(spec, enabled, pair_id, warmup=False):
     events.sort(key=lambda e: e['t'])
     result = {'scenario': spec['id'], 'label': spec['label'], 'pair_id': pair_id,
               'mode': 'enabled' if enabled else 'baseline', 'measurement_kind': 'livekit',
+              'acoustic_enabled': acoustic_enabled,
               'audio_sha256': spec['sha256'], 'status': status, 'error': error,
               'warmup': warmup, 'events': events, 'speech_end': spec['speech_end'],
               'clock_uncertainty_ms': rtt * 500 if rtt else None,
               'max_input_schedule_lag_ms': max_schedule_lag * 1000,
               'telemetry_dropped': telemetry_dropped,
               'metrics': run_metrics(events, spec['speech_end'])}
+    acoustic_events = [e for e in events if e['kind'] == 'acoustic_prediction']
+    ui_times = [e['ui_transport_ms'] for e in acoustic_events if 'ui_transport_ms' in e]
+    result['acoustic_metrics'] = {
+        'predictions': len(acoustic_events),
+        'inference_p50_ms': percentile([e['inference_ms'] for e in acoustic_events], 50),
+        'inference_p95_ms': percentile([e['inference_ms'] for e in acoustic_events], 95),
+        'audio_to_signal_p50_ms': percentile(
+            [e['effective_latency_ms'] for e in acoustic_events], 50),
+        'audio_to_signal_p95_ms': percentile(
+            [e['effective_latency_ms'] for e in acoustic_events], 95),
+        'signal_to_receiver_p50_ms': percentile(ui_times, 50),
+        'signal_to_receiver_p95_ms': percentile(ui_times, 95),
+    }
     if telemetry_dropped or result['metrics']['response_ms'] is None:
         result['status'] = 'failed'
         result['error'] = result['error'] or 'Dropped telemetry or missing response audio'

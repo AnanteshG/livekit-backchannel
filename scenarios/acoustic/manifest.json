@@ -1,0 +1,92 @@
+[
+  {
+    "id": "same_positive",
+    "text": "Yeah, that's great.",
+    "delivery": "Sound genuinely pleased, warm and confident.",
+    "file": "same_positive.wav",
+    "duration_seconds": 2.35,
+    "sha256": "8b89a6d23d6e528ad1e7d3915f3660bce1ecf12fee40b70cf9ff0f40dd8b2b22",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "same_frustrated",
+    "text": "Yeah, that's great.",
+    "delivery": "Sound clearly frustrated and skeptical, with tense energetic delivery.",
+    "file": "same_frustrated.wav",
+    "duration_seconds": 2.4,
+    "sha256": "e8194eaf2c9564efc4c6c0f58b4945d44e246d084f337113a57b32dbb9ab378b",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "background_noise",
+    "text": "Yeah, that's great.",
+    "delivery": "Sound clearly frustrated and skeptical, with tense energetic delivery. Seeded background noise.",
+    "file": "background_noise.wav",
+    "duration_seconds": 2.4,
+    "sha256": "b21c006ee99b72a8023682bc8b17fc818ab0bd740746f4eea6cffd145a4a1e8b",
+    "derived_from": "same_frustrated",
+    "noise_seed": 41
+  },
+  {
+    "id": "increasing_frustration",
+    "text": "I reported this once, then twice, and I am still waiting for a useful answer.",
+    "delivery": "Begin calm, become progressively more frustrated and emphatic toward the end.",
+    "file": "increasing_frustration.wav",
+    "duration_seconds": 6.75,
+    "sha256": "7a217577fff5c24dedc8dce29ad916731b651960a1bcbdce661939916cab8f0a",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "hesitant",
+    "text": "I think we could possibly try the second option, if that makes sense.",
+    "delivery": "Sound hesitant and uncertain, with uneven pacing, fillers and short pauses.",
+    "file": "hesitant.wav",
+    "duration_seconds": 4.3,
+    "sha256": "c8ceb10bfd3f85eab25c342114bf16ee27de562c08af4e5eef61d9f46c8d2802",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "high_energy",
+    "text": "This is exciting, we can launch the new workflow today.",
+    "delivery": "Speak quickly with high energy and excitement.",
+    "file": "high_energy.wav",
+    "duration_seconds": 4.25,
+    "sha256": "e891f688ed0ac507bab92750ff3af8d0d204d97cbb83b2f3c8a3019dbbaad1d8",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "flat",
+    "text": "The update is complete and the report is ready.",
+    "delivery": "Use flat, low-energy, disengaged delivery with little pitch variation.",
+    "file": "flat.wav",
+    "duration_seconds": 4.2,
+    "sha256": "2ee1bcbb6e83b77508c7067e15f0a425a31e846283305a64680885f6c8f66c1d",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "long_change",
+    "text": "Let me explain the situation from the beginning. The first step worked, the next step failed twice, and now I need a clear solution before the deadline.",
+    "delivery": "Start calm and confident, become hesitant in the middle, then frustrated and emphatic.",
+    "file": "long_change.wav",
+    "duration_seconds": 9.65,
+    "sha256": "985890361c58dff5e801c6606f7727a84e14a1de3e71fe169661184e1219d4c0",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  },
+  {
+    "id": "hinglish",
+    "text": "Mujhe lagta hai yeh approach theek hai, but I am not fully sure yet.",
+    "delivery": "Natural Hindi and English code-switching, thoughtful and somewhat uncertain.",
+    "file": "hinglish.wav",
+    "duration_seconds": 4.9,
+    "sha256": "55be4b04bf55b3d3a1148bc04da4200029fd416f58675a95a7c7dc66fd0578a3",
+    "model": "gpt-4o-mini-tts",
+    "voice": "alloy"
+  }
+]

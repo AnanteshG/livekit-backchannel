@@ -1,3 +1,5 @@
+import json
+
 import jwt
 from fastapi.testclient import TestClient
 
@@ -42,7 +44,8 @@ def test_tokens_are_scoped_and_dispatch_correct_mode(monkeypatch):
         claims = jwt.decode(data['token'], options={'verify_signature': False})
         assert claims['video']['room'] == data['room']
         assert claims['exp'] - claims['nbf'] == 900
-        assert claims['roomConfig']['agents'][0]['metadata'] == '{"enabled": false}'
+        assert json.loads(claims['roomConfig']['agents'][0]['metadata']) == {
+            'enabled': False, 'acoustic_enabled': True}
         assert client.post('/api/connect', json={}, headers={'X-Demo-Key':'test-access'}).status_code == 429
 
 

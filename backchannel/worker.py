@@ -11,6 +11,7 @@ from livekit.agents.voice import room_io
 from livekit.plugins import deepgram, openai, silero
 
 from .acknowledgements import Acknowledgements
+from .acoustics import StreamingAcoustics, text_sentiment
 from .audio import ROOT, LiveKitSink
 from .engine import BackchannelEngine
 from .events import Timeline
@@ -43,6 +44,9 @@ class MeasuredAgent(Agent):
                     self.engine.transcript(best.text,
                         final=event.type == stt.SpeechEventType.FINAL_TRANSCRIPT,
                         confidence=confidence)
+                    if event.type == stt.SpeechEventType.FINAL_TRANSCRIPT:
+                        self.timeline.emit('text_baseline', text=best.text,
+                                           **text_sentiment(best.text))
             yield event
 
     async def llm_node(self, chat_ctx, tools, model_settings):
@@ -78,6 +82,7 @@ async def entrypoint(ctx: JobContext):
     participant = await ctx.wait_for_participant()
     metadata = json.loads(ctx.job.metadata or '{}')
     enabled = metadata.get('enabled', True) is True
+    acoustic_enabled = metadata.get('acoustic_enabled', True) is True
     timeline = Timeline()
     queue = asyncio.Queue(maxsize=512)
     dropped = 0
@@ -105,12 +110,33 @@ async def entrypoint(ctx: JobContext):
     clips = Acknowledgements()
 
     async def cached():
-        phrase, audio = clips.next_clip()
+        phrase, audio = clips.next_clip(allow_verbal=not engine.high_frustration)
         timeline.emit('bc_clip_selected', decision=engine.sequence, phrase=phrase,
                       duration_ms=len(audio) / 32)
         return audio
 
     engine = BackchannelEngine(cached, LiveKitSink(source), timeline, enabled=enabled)
+
+    def on_acoustic(prediction):
+        engine.acoustic_state(prediction.frustration, prediction.confidence,
+                              prediction.uncertainty)
+
+    acoustics = StreamingAcoustics(on_acoustic, timeline=timeline, enabled=acoustic_enabled)
+    acoustics.start()
+    input_stream = rtc.AudioStream.from_participant(
+        participant=participant, track_source=rtc.TrackSource.SOURCE_MICROPHONE,
+        capacity=20, sample_rate=16000, num_channels=1, frame_size_ms=20)
+
+    async def analyze_audio():
+        try:
+            async for event in input_stream:
+                acoustics.push(bytes(event.frame.data))
+        except asyncio.CancelledError:
+            raise
+        except Exception as error:
+            timeline.emit('acoustic_stream_failed', error=type(error).__name__)
+
+    acoustic_reader = asyncio.create_task(analyze_audio(), name='acoustic-audio-reader')
     session = AgentSession(
         stt=deepgram.STT(model=os.getenv('STT_MODEL', 'nova-3'), interim_results=True),
         llm=openai.LLM(model=os.getenv('LLM_MODEL', 'gpt-4o-mini'), temperature=0),
@@ -132,6 +158,7 @@ async def entrypoint(ctx: JobContext):
             engine.user_started()
         else:
             engine.user_stopped()
+            acoustics.reset_turn()
 
     @session.on('agent_state_changed')
     def agent_state(event):
@@ -158,6 +185,8 @@ async def entrypoint(ctx: JobContext):
             return
         if packet.topic == 'lab.control' and isinstance(message.get('enabled'), bool):
             engine.set_enabled(message['enabled'])
+            if isinstance(message.get('acoustic_enabled'), bool):
+                acoustics.set_enabled(message['acoustic_enabled'])
         elif packet.topic == 'lab.ping' and isinstance(message.get('t0'), (int, float)):
             enqueue({'kind': 'clock_pong', 't0': message['t0'],
                      'server_time': perf_counter(), 't': perf_counter() - timeline.origin})
@@ -172,9 +201,12 @@ async def entrypoint(ctx: JobContext):
             return
         cleaned = True
         await engine.aclose()
+        await acoustics.aclose()
+        acoustic_reader.cancel()
         ticker.cancel()
         sender.cancel()
-        await asyncio.gather(ticker, sender, return_exceptions=True)
+        await asyncio.gather(ticker, sender, acoustic_reader, return_exceptions=True)
+        await input_stream.aclose()
         await source.aclose()
 
     ctx.add_shutdown_callback(cleanup)
@@ -190,7 +222,7 @@ async def entrypoint(ctx: JobContext):
                 audio_input=room_io.AudioInputOptions(
                     sample_rate=16000, pre_connect_audio=False),
                 audio_output=room_io.AudioOutputOptions(sample_rate=24000)))
-        timeline.emit('ready', enabled=enabled)
+        timeline.emit('ready', enabled=enabled, acoustic_enabled=acoustic_enabled)
     except BaseException:
         await cleanup()
         raise
