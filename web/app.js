@@ -51,42 +51,84 @@ function resetLive(message) {
 function drawExpressionTimeline() {
   const canvas = $("expressionTimeline");
   const context = canvas.getContext("2d");
-  const width = canvas.width, height = canvas.height;
+  const width = canvas.clientWidth;
+  if (!width) return;
+  const height = 390, ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.round(width * ratio);
+  canvas.height = Math.round(height * ratio);
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
   context.clearRect(0, 0, width, height);
-  context.font = "11px Segoe UI";
-  context.fillStyle = "#64767d";
-  context.fillText("last 20 seconds", 10, 16);
-  for (const [key, color, offset] of [["frustration", "#c65b50", 0], ["uncertainty", "#8774ba", 1], ["energy", "#147d73", 2]]) {
+  const now = performance.now();
+  expressionPoints = expressionPoints.filter(point => now - point.timestamp <= 20000);
+  timelineMarkers = timelineMarkers.filter(marker => now - marker.timestamp <= 20000);
+  const left = 34, right = width - 14;
+  const xFor = timestamp => left + Math.max(0, Math.min(1,
+    1 - (now - timestamp) / 20000)) * (right - left);
+  const cues = [["frustration", "Frustration cue", "#b9473d"],
+    ["uncertainty", "Uncertainty cue", "#7552aa"], ["energy", "Energy", "#147d73"]];
+  cues.forEach(([key, label, color], row) => {
+    const top = row * 104 + 30, bottom = top + 64;
+    context.font = "600 13px Segoe UI";
+    context.fillStyle = color;
+    context.fillText(label, left, top - 12);
+    context.font = "11px Segoe UI";
+    for (const value of [0, .5, 1]) {
+      const y = bottom - value * 64;
+      context.strokeStyle = "#e0e7ec";
+      context.lineWidth = 1;
+      context.beginPath(); context.moveTo(left, y); context.lineTo(right, y); context.stroke();
+      context.fillStyle = "#63717e";
+      context.fillText(String(value), 6, y + 4);
+    }
     context.strokeStyle = color;
-    context.lineWidth = 2;
+    context.lineWidth = 2.5;
+    context.lineJoin = "round";
     context.beginPath();
     expressionPoints.forEach((point, index) => {
-      const x = 10 + (point.age / 20) * (width - 20);
-      const y = height - 20 - point[key] * (height - 42);
-      if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+      const x = xFor(point.timestamp);
+      const y = bottom - Math.max(0, Math.min(1, point[key])) * 64;
+      if (index === 0 || point.timestamp - expressionPoints[index - 1].timestamp > 1500)
+        context.moveTo(x, y);
+      else context.lineTo(x, y);
     });
     context.stroke();
-    context.fillStyle = color;
-    context.fillText(key, 90 + offset * 120, 16);
-  }
-  context.fillStyle = "#1e3038";
-  timelineMarkers.forEach((marker) => {
-    const x = 10 + (marker.age / 20) * (width - 20);
-    context.fillRect(x, height - 12, 2, 8);
-    context.fillText(marker.label, Math.min(x + 3, width - 55), height - 4);
+    const last = expressionPoints.at(-1);
+    if (last) {
+      context.fillStyle = color;
+      context.beginPath(); context.arc(xFor(last.timestamp), bottom - Math.max(0, Math.min(1, last[key])) * 64, 3.5, 0, Math.PI * 2); context.fill();
+    } else {
+      context.fillStyle = "#63717e";
+      context.font = "12px Segoe UI";
+      context.fillText("Speak to see this cue", left + 12, top + 36);
+    }
   });
+  context.font = "11px Segoe UI";
+  context.fillStyle = "#63717e";
+  for (const [fraction, label] of [[0, "20s ago"], [.5, "10s ago"], [1, "Now"]]) {
+    context.textAlign = fraction === 0 ? "left" : fraction === 1 ? "right" : "center";
+    context.fillText(label, left + fraction * (right - left), 327);
+  }
+  context.textAlign = "left";
+  const markerRows = { ack: 349, EOT: 365, answer: 381 };
+  timelineMarkers.forEach((marker) => {
+    const y = markerRows[marker.label] || 349;
+    context.fillStyle = "#314852";
+    const progress = Math.max(0, Math.min(1, 1 - (now - marker.timestamp) / 20000));
+    context.fillRect(152 + progress * (right - 152), y - 7, 3, 9);
+  });
+  context.fillStyle = "#63717e";
+  context.fillText("Acknowledgement", left, 349);
+  context.fillText("End of turn", left, 365);
+  context.fillText("Answer", left, 381);
 }
+new ResizeObserver(drawExpressionTimeline).observe($("expressionTimeline"));
+setInterval(() => { if (!$("live").hidden) drawExpressionTimeline(); }, 250);
 function updateExpression(event) {
   for (const name of ["frustration", "uncertainty", "energy"]) {
     $(name).value = event[name];
     $(`${name}Value`).textContent = event[name].toFixed(2);
   }
   expressionPoints.push({ ...event, timestamp: performance.now() });
-  const now = performance.now();
-  expressionPoints = expressionPoints.filter((point) => now - point.timestamp <= 20000)
-    .map((point) => ({ ...point, age: 1 - (now - point.timestamp) / 20000 }));
-  timelineMarkers = timelineMarkers.filter((marker) => now - marker.timestamp <= 20000)
-    .map((marker) => ({ ...marker, age: 1 - (now - marker.timestamp) / 20000 }));
   $("acousticMeta").textContent = `${event.audio_seconds.toFixed(2)}s window · ${event.inference_ms.toFixed(1)}ms inference · confidence ${event.confidence.toFixed(2)}`;
   drawExpressionTimeline();
 }

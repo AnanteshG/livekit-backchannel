@@ -853,7 +853,9 @@ nav { width: fit-content; gap: 4px; padding: 4px; background: #e9eef0; border: 1
 .signal-grid > div:nth-child(2) { --cue-color: #8774ba; }
 .signal-grid > div:nth-child(3) { --cue-color: #147d73; }
 .signal-grid strong { color: var(--cue-color); }
-#expressionTimeline { height: auto; aspect-ratio: 700 / 210; margin-top: 10px; }
+#expressionTimeline { display: block; height: 390px; aspect-ratio: auto; margin-top: 12px; background: #fbfcfd; }
+.chart-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chart-heading span { color: var(--muted); font-size: 11px; }
 .live-card { padding: 24px; }
 .orb { width: 70px; height: 70px; line-height: 65px; font-size: 36px; margin: 6px auto 22px; box-shadow: 0 0 0 8px #f4f9f7; }
 .live-card h3 { font-size: 20px; }
