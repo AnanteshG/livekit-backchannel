@@ -197,16 +197,20 @@ async def replay(spec, enabled, pair_id, warmup=False, acoustic_enabled=True):
               'metrics': run_metrics(events, spec['speech_end'])}
     acoustic_events = [e for e in events if e['kind'] == 'acoustic_prediction']
     ui_times = [e['ui_transport_ms'] for e in acoustic_events if 'ui_transport_ms' in e]
+    def optional_percentile(values, q):
+        return percentile(values, q) if values else None
     result['acoustic_metrics'] = {
         'predictions': len(acoustic_events),
-        'inference_p50_ms': percentile([e['inference_ms'] for e in acoustic_events], 50),
-        'inference_p95_ms': percentile([e['inference_ms'] for e in acoustic_events], 95),
-        'audio_to_signal_p50_ms': percentile(
+        'inference_p50_ms': optional_percentile(
+            [e['inference_ms'] for e in acoustic_events], 50),
+        'inference_p95_ms': optional_percentile(
+            [e['inference_ms'] for e in acoustic_events], 95),
+        'audio_to_signal_p50_ms': optional_percentile(
             [e['effective_latency_ms'] for e in acoustic_events], 50),
-        'audio_to_signal_p95_ms': percentile(
+        'audio_to_signal_p95_ms': optional_percentile(
             [e['effective_latency_ms'] for e in acoustic_events], 95),
-        'signal_to_receiver_p50_ms': percentile(ui_times, 50),
-        'signal_to_receiver_p95_ms': percentile(ui_times, 95),
+        'signal_to_receiver_p50_ms': optional_percentile(ui_times, 50),
+        'signal_to_receiver_p95_ms': optional_percentile(ui_times, 95),
     }
     if telemetry_dropped or result['metrics']['response_ms'] is None:
         result['status'] = 'failed'

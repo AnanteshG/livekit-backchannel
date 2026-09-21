@@ -2,7 +2,7 @@
 
 ## Prototype
 
-The worker opens a second public LiveKit `AudioStream` for the user's microphone, independent of STT, turn detection, LLM and TTS. `StreamingAcoustics` keeps at most 1.5 seconds of 16 kHz mono PCM, submits a window every 250 ms after 750 ms of speech, and retains only one waiting inference. Slow inference replaces old waiting windows instead of building a backlog.
+The public LiveKit STT node tees incoming PCM into `StreamingAcoustics` before yielding the same frames unchanged to STT. Acoustic inference runs in its own task and is independent of turn detection, LLM and TTS. The processor keeps at most 1.5 seconds of 16 kHz mono PCM, submits a window every 250 ms after 750 ms of speech, and retains only one waiting inference. Slow inference replaces old waiting windows instead of building a backlog.
 
 `prosody-dsp-v1` is an interpretable CPU baseline. It measures voiced energy, pauses, frame-energy variation and zero-crossing roughness. It emits uncalibrated energy, uncertainty and frustration cues and never reads transcript text. EMA smoothing (`alpha=0.35`) reduces adjacent-window flicker; confidence grows with usable voiced audio. These values describe delivery, not a person's true emotional state.
 
@@ -17,7 +17,7 @@ flowchart LR
   Mic[User microphone] --> LK[LiveKit room]
   LK --> Core[AgentSession input]
   Core --> STT[STT and turn detection] --> LLM[LLM] --> TTS[TTS] --> Answer[Answer track]
-  LK --> Stream[Bounded AudioStream] --> Ring[1.5 s PCM ring]
+  LK --> Stream[Public STT-node PCM tee] --> Ring[1.5 s PCM ring]
   Ring --> Latest[One-slot latest window] --> Model[Acoustic model]
   Model --> Smooth[EMA state] --> Policy[Backchannel policy] --> Ack[Cached ack track]
   Smooth -. non-blocking .-> Telemetry[Bounded telemetry] --> UI[Expression timeline]
@@ -38,7 +38,7 @@ The signal changes one real decision. When smoothed frustration is at least 0.82
 
 Audio arrives in 20 ms frames. The SDK stream is capped at 20 frames. The processor holds a fixed 48 KB PCM window and one pending request. If inference slows from 40 ms to 300 ms while stride is 250 ms, the waiting item is replaced with the newest window. A completed result is discarded if a newer window was submitted. Memory stays bounded and predictions stay current at the cost of temporal resolution. Counters expose replaced and stale windows.
 
-Speech stop clears the ring, waiting work and smoothing state, and invalidates in-flight results. Disable does the same. Shutdown cancels the reader and model worker and closes both LiveKit audio streams. Model exceptions emit `acoustic_failed`; telemetry failure does not stop audio processing.
+Speech stop clears the ring, waiting work and smoothing state, and invalidates in-flight results. Disable does the same. Shutdown cancels the model worker; LiveKit owns the original input stream. Model exceptions emit `acoustic_failed`; telemetry failure does not stop audio processing.
 
 ## Measurements and evidence
 

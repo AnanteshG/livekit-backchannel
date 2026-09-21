@@ -21,12 +21,12 @@ server = AgentServer()
 
 
 class MeasuredAgent(Agent):
-    def __init__(self, engine, timeline):
+    def __init__(self, engine, timeline, acoustics=None):
         super().__init__(instructions=(
             'You are a thoughtful technical interviewer. Listen to the entire user turn. '
             'Respond naturally in one or two concise sentences. Do not add listening noises '
             'or fillers; a separate audio channel handles those.'))
-        self.engine, self.timeline = engine, timeline
+        self.engine, self.timeline, self.acoustics = engine, timeline, acoustics
         self.request_sequence = 0
 
     async def on_user_turn_completed(self, turn_ctx, new_message):
@@ -34,7 +34,14 @@ class MeasuredAgent(Agent):
         self.engine.set_agent_busy(True)
 
     async def stt_node(self, audio, model_settings):
-        async for event in Agent.default.stt_node(self, audio, model_settings):
+        async def tapped_audio():
+            async for frame in audio:
+                if self.acoustics:
+                    self.acoustics.push(bytes(frame.data))
+                yield frame
+
+        source = tapped_audio() if self.acoustics else audio
+        async for event in Agent.default.stt_node(self, source, model_settings):
             if isinstance(event, stt.SpeechEvent) and event.alternatives:
                 if event.type in (stt.SpeechEventType.INTERIM_TRANSCRIPT,
                                   stt.SpeechEventType.FINAL_TRANSCRIPT):
@@ -123,20 +130,6 @@ async def entrypoint(ctx: JobContext):
 
     acoustics = StreamingAcoustics(on_acoustic, timeline=timeline, enabled=acoustic_enabled)
     acoustics.start()
-    input_stream = rtc.AudioStream.from_participant(
-        participant=participant, track_source=rtc.TrackSource.SOURCE_MICROPHONE,
-        capacity=20, sample_rate=16000, num_channels=1, frame_size_ms=20)
-
-    async def analyze_audio():
-        try:
-            async for event in input_stream:
-                acoustics.push(bytes(event.frame.data))
-        except asyncio.CancelledError:
-            raise
-        except Exception as error:
-            timeline.emit('acoustic_stream_failed', error=type(error).__name__)
-
-    acoustic_reader = asyncio.create_task(analyze_audio(), name='acoustic-audio-reader')
     session = AgentSession(
         stt=deepgram.STT(model=os.getenv('STT_MODEL', 'nova-3'), interim_results=True),
         llm=openai.LLM(model=os.getenv('LLM_MODEL', 'gpt-4o-mini'), temperature=0),
@@ -202,11 +195,9 @@ async def entrypoint(ctx: JobContext):
         cleaned = True
         await engine.aclose()
         await acoustics.aclose()
-        acoustic_reader.cancel()
         ticker.cancel()
         sender.cancel()
-        await asyncio.gather(ticker, sender, acoustic_reader, return_exceptions=True)
-        await input_stream.aclose()
+        await asyncio.gather(ticker, sender, return_exceptions=True)
         await source.aclose()
 
     ctx.add_shutdown_callback(cleanup)
@@ -215,7 +206,7 @@ async def entrypoint(ctx: JobContext):
         # cloud recorder otherwise use Soxr, which can assert in its Windows
         # FFT cache. Keep OpenAI's native 24 kHz response output unchanged.
         # Our own bounded event telemetry does not depend on cloud recording.
-        await session.start(agent=MeasuredAgent(engine, timeline), room=ctx.room,
+        await session.start(agent=MeasuredAgent(engine, timeline, acoustics), room=ctx.room,
             record=False,
             room_options=room_io.RoomOptions(
                 participant_identity=participant.identity,

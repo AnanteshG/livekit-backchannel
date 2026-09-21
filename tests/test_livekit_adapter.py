@@ -65,3 +65,31 @@ async def test_public_stt_hook_uses_confidence_without_consuming_transcript(monk
     await settle()
     assert s.plays == 0
     await e.aclose()
+
+
+async def test_public_stt_hook_tees_pcm_to_acoustics(monkeypatch):
+    e, _, _, timeline = setup()
+    frame = rtc.AudioFrame(data=bytes(640), sample_rate=16000,
+                           num_channels=1, samples_per_channel=320)
+    event = SimpleNamespace()
+
+    class Acoustics:
+        chunks = []
+
+        def push(self, pcm):
+            self.chunks.append(pcm)
+
+    async def audio():
+        yield frame
+
+    async def default(_agent, source, _settings):
+        received = [item async for item in source]
+        assert received == [frame]
+        yield event
+
+    acoustics = Acoustics()
+    monkeypatch.setattr(Agent.default, 'stt_node', default)
+    agent = MeasuredAgent(e, timeline, acoustics)
+    assert [x async for x in agent.stt_node(audio(), None)] == [event]
+    assert acoustics.chunks == [bytes(frame.data)]
+    await e.aclose()
