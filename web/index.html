@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Backchannel Lab · Blue Machines</title>
-    <link rel="stylesheet" href="/static/style.css?v=refresh-2" />
+    <link rel="stylesheet" href="/static/style.css?v=meters-3" />
   </head>
   <body>
     <div class="shell">
@@ -91,9 +91,9 @@
               <div class="panel-head"><h3>Acoustic expression</h3><span class="footnote">live</span></div>
               <p class="footnote">Audio-only conversational cues. Not an emotion diagnosis.</p>
               <div class="signal-grid">
-                <div><span>Frustration cue</span><strong id="frustrationValue">—</strong><meter id="frustration" min="0" max="1" value="0"></meter></div>
-                <div><span>Uncertainty cue</span><strong id="uncertaintyValue">—</strong><meter id="uncertainty" min="0" max="1" value="0"></meter></div>
-                <div><span>Energy</span><strong id="energyValue">—</strong><meter id="energy" min="0" max="1" value="0"></meter></div>
+                <div><span>Frustration cue</span><strong id="frustrationValue">—</strong><meter aria-label="Frustration cue" id="frustration" min="0" max="1" value="0"></meter></div>
+                <div><span>Uncertainty cue</span><strong id="uncertaintyValue">—</strong><meter aria-label="Uncertainty cue" id="uncertainty" min="0" max="1" value="0"></meter></div>
+                <div><span>Energy</span><strong id="energyValue">—</strong><meter aria-label="Energy" id="energy" min="0" max="1" value="0"></meter></div>
               </div>
               <canvas id="expressionTimeline" width="700" height="210" aria-label="Expression timeline"></canvas>
               <p class="footnote" id="acousticMeta">Waiting for enough audio…</p>
