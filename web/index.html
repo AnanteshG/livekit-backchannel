@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Backchannel Lab · Blue Machines</title>
-    <link rel="stylesheet" href="/static/style.css?v=acoustic-1" />
+    <link rel="stylesheet" href="/static/style.css?v=refresh-2" />
   </head>
   <body>
     <div class="shell">
@@ -24,35 +24,28 @@
         <section class="hero">
           <div>
             <div class="eyebrow teal">REAL-TIME CONVERSATION, MEASURED</div>
-            <h1>Listen beyond the words.<br />Without slowing the answer.</h1>
+            <h1>A little more listening.<br /><span>A more natural conversation.</span></h1>
             <p>
-              See acoustic cues update while you speak, and how they guide<br class="desktop" />
-              short acknowledgements without entering the answer path.
+              Speak naturally. Watch the audio cues change.<br class="desktop" />
+              Hear how a small acknowledgement makes a difference.
             </p>
           </div>
           
         </section>
         <nav aria-label="Workspace">
-          <button class="tab active" id="approachTab">01 &nbsp; Approach</button
-          ><button class="tab" id="liveTab">02 &nbsp; Live conversation</button>
+          <button class="tab active" id="approachTab">The approach</button
+          ><button class="tab" id="liveTab">Try it live <span aria-hidden="true">↗</span></button>
         </nav>
         <section id="approach" aria-labelledby="approachTitle">
-<div class="section-head"><h2 id="approachTitle">How it works</h2></div>
-<div class="panel explain-card">
-<p>The agent analyzes a rolling 1.5-second audio window every 250 ms. It shows acoustic cues for energy, uncertainty and frustration while you are still speaking. These are delivery signals, not claims about your true emotions.</p>
-<ul>
-<li><strong>When:</strong> after 2.4 seconds of speech and at least five recent words.</li>
-<li><strong>When to stop:</strong> when you pause, seem about to finish, or the agent needs to answer.</li>
-<li><strong>Use the signal:</strong> sustained frustration cues increase the acknowledgement cooldown and avoid “go on.”</li>
-<li><strong>Keep it safe:</strong> only the latest audio window is useful; stale work is dropped and failures never block the answer.</li>
-</ul>
-<p>We use a saved audio clip to avoid a speech-generation delay. It never becomes part of the AI’s conversation history. The trade-off is a repeated voice clip and simple pause detection.</p>
+<div class="section-head"><h2 id="approachTitle">Three small steps. One flowing conversation.</h2><span class="muted">Audio first · Python + LiveKit</span></div>
+<div class="approach-grid">
+<article class="panel explain-card"><span class="step-number">01 / LISTEN</span><h3>Read the delivery</h3><p>A 1.5-second audio window updates every 250 ms, tracking energy, uncertainty and frustration cues.</p><span class="card-note">Delivery cues, not a diagnosis of emotion.</span></article>
+<article class="panel explain-card"><span class="step-number">02 / ACKNOWLEDGE</span><h3>A little “mm-hmm”</h3><p>Short, saved clips acknowledge longer speech. Strong frustration cues mean fewer acknowledgements and no “go on.”</p><span class="card-note">Stops when you pause or an answer begins.</span></article>
+<article class="panel explain-card"><span class="step-number">03 / RESPOND</span><h3>Keep the answer moving</h3><p>The answer runs independently. Acoustic work uses a small queue and drops old windows to avoid a backlog.</p><span class="card-note">The answer never waits for acoustic inference.</span></article>
 </div>
-<div class="section-head"><h2>How we check it</h2></div>
-<div class="panel explain-card">
-<p>Repeatable scenarios compare the same words with different delivery, acoustic processing on/off, slow inference, noise and failures. The timeline keeps acoustic predictions beside speech, acknowledgements, end-of-turn and the normal answer.</p>
-<p><strong>Limit:</strong> the full benchmark was recorded before the Windows audio fix. It needs a fresh run. Better naturalness and no added delay are not yet proven.</p>
-<p><a class="text-link" href="https://github.com/AnanteshG/livekit-backchannel/blob/main/results/analysis.md" target="_blank" rel="noreferrer">Results</a> · <a class="text-link" href="https://github.com/AnanteshG/livekit-backchannel#readme" target="_blank" rel="noreferrer">Full explanation</a></p>
+<div class="evidence-strip">
+<div><span class="eyebrow teal">TESTED, WITH LIMITS</span><h3>12 cloud calls. 6 paired comparisons.</h3><p>All calls completed. Audio analysis took 0.76 ms P50; answers averaged 299 ms slower with it on. More trials are needed to explain the difference.</p></div>
+<a class="text-link" href="https://github.com/AnanteshG/livekit-backchannel/blob/main/docs/acoustic-system-design.md" target="_blank" rel="noreferrer">Read the evidence ↗</a>
 </div>
 <div class="approach-next"><a class="primary" href="#live" data-view="live">Try a conversation →</a></div>
 </section>
@@ -105,9 +98,9 @@
               <canvas id="expressionTimeline" width="700" height="210" aria-label="Expression timeline"></canvas>
               <p class="footnote" id="acousticMeta">Waiting for enough audio…</p>
             </div>
-            <div class="panel">
+            <div class="panel events-card">
               <div class="panel-head">
-                <h3>Live event stream</h3>
+                <h3>Conversation activity</h3>
                 <button id="clearEvents">Clear</button>
               </div>
               <p class="footnote">
@@ -127,6 +120,6 @@
       </main>
     </div>
     <script src="/static/vendor/livekit-client.umd.min.js"></script>
-    <script src="/static/app.js?v=acoustic-1"></script>
+    <script src="/static/app.js?v=refresh-2"></script>
   </body>
 </html>

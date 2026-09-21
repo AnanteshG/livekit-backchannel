@@ -1,5 +1,5 @@
 :root {
-  --bg: #f5f7f8;
+  --bg: #f7f8fa;
   --ink: #1e3038;
   --muted: #64767d;
   --line: #dce4e7;
@@ -22,7 +22,7 @@ body {
     sans-serif;
 }
 .shell {
-  max-width: 1440px;
+  max-width: 1240px;
   margin: auto;
   padding: 0 56px;
 }
@@ -808,6 +808,72 @@ footer span:first-child {
 .approach-next .primary {
   padding: 12px 18px;
   border-radius: 7px;
+}
+/* Compact reading and live-workspace layout. */
+header { height: 78px; }
+header > a:last-child { font-size: 12px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.hero { padding: 46px 0 32px; }
+.hero h1 { font-size: clamp(32px, 4vw, 49px); font-weight: 650; letter-spacing: -2px; line-height: 1.14; }
+.hero h1 span { color: var(--teal); }
+.hero p { margin-bottom: 0; }
+nav { width: fit-content; gap: 4px; padding: 4px; background: #e9eef0; border: 1px solid #e2e8eb; border-radius: 12px; }
+.tab { border-radius: 8px; padding: 10px 20px; font-weight: 600; }
+.tab.active { border: 0; background: white; box-shadow: 0 2px 5px #183c4510; color: var(--ink); }
+.tab span { margin-left: 12px; color: var(--teal); }
+.section-head { margin: 30px 0 18px; }
+.section-head h2 { font-size: 21px; }
+.section-head > .muted { font-size: 11px; }
+.approach-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.panel { border-radius: 16px; box-shadow: 0 4px 18px #213c4404; }
+.explain-card { padding: 25px; display: flex; flex-direction: column; }
+.step-number { color: var(--teal); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
+.explain-card h3 { font-size: 20px; letter-spacing: -.5px; margin: 20px 0 0; }
+.explain-card p { font-size: 13px; line-height: 1.75; margin: 12px 0 20px; }
+.card-note { margin-top: auto; border-top: 1px solid var(--line); padding-top: 14px; font-size: 11px; color: var(--muted); }
+.evidence-strip { display: flex; align-items: center; gap: 30px; justify-content: space-between; margin-top: 20px; padding: 24px 26px; border: 1px solid #d6e5df; background: #eef5f1; border-radius: 14px; }
+.evidence-strip h3 { margin: 6px 0; font-size: 17px; font-weight: 600; }
+.evidence-strip p { max-width: 700px; margin: 0; font-size: 12px; color: #52665f; }
+.evidence-strip a { white-space: nowrap; font-size: 12px; }
+.primary { display: inline-flex; justify-content: center; align-items: center; border-radius: 9px; font-weight: 600; box-shadow: 0 3px 8px #147d7315; }
+.primary:hover { background: #10695f; }
+.live-grid { grid-template-columns: minmax(280px, .85fr) minmax(0, 1.4fr); gap: 20px; align-items: stretch; }
+.acoustic-card { grid-column: auto; padding: 0 24px 20px; }
+.acoustic-card .panel-head { padding: 22px 0 16px; }
+.acoustic-card .footnote { margin: 14px 0; }
+.acoustic-card .panel-head .footnote { background: var(--pale); color: var(--teal); border-radius: 20px; padding: 3px 10px; margin: 0; }
+.signal-grid { gap: 12px; margin: 26px 0; }
+.signal-grid > div { background: #f7f9fa; padding: 12px; border-radius: 9px; }
+.signal-grid span { font-size: 10px; }
+.signal-grid strong { font-size: 17px; }
+.signal-grid meter { height: 8px; }
+#expressionTimeline { height: auto; aspect-ratio: 700 / 210; margin-top: 10px; }
+.live-card { padding: 24px; }
+.orb { width: 70px; height: 70px; line-height: 65px; font-size: 36px; margin: 6px auto 22px; box-shadow: 0 0 0 8px #f4f9f7; }
+.live-card h3 { font-size: 20px; }
+.toggle { display: flex; align-items: center; gap: 10px; margin: 12px 0; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; font-size: 12px; }
+.toggle input { width: 16px; height: 16px; margin: 0; }
+.key-label { max-width: none; margin: 16px 0; }
+.key-label input { background: #fafbfc; }
+.actions { flex-wrap: wrap; }
+.actions button { flex: 1; font-size: 12px; white-space: nowrap; }
+.live-card .footnote { margin: 14px 0 0; font-size: 10px; }
+.events-card { grid-column: 1 / -1; }
+.live-events { height: 180px; margin-bottom: 20px; }
+.live-events:empty::before { content: "Your conversation activity will appear here once you connect."; display: block; padding: 30px 0; color: var(--muted); font: 12px Segoe UI, sans-serif; }
+input:focus-visible { outline: 3px solid #7abcb2; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .orb.on { animation: none; } }
+@media (max-width: 800px) {
+  .approach-grid, .live-grid { grid-template-columns: 1fr; }
+  .hero h1 { letter-spacing: -1.3px; }
+  .section-head { align-items: flex-start; gap: 8px; flex-direction: column; }
+  .evidence-strip { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .explain-card h3 { margin-top: 12px; }
+  .acoustic-card { padding: 0 18px 18px; }
+  .signal-grid { gap: 7px; }
+  .signal-grid > div { padding: 8px; }
+  .signal-grid strong { font-size: 14px; }
+  .brand { font-size: 17px; }
+  .desktop { display: none; }
 }
 code {
   font-size: 0.9em;
