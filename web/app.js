@@ -208,7 +208,7 @@ fetch("/api/status")
   .then((r) => r.json())
   .then((status) => {
     $("availability").textContent = status.configured
-      ? "Credentials configured. The agent worker must also be running."
+      ? "Live mode is configured. Connect to test the cloud worker."
       : `Live mode needs: ${status.missing.join(", ")}. See the README for setup.`;
   })
   .catch((e) => {
