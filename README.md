@@ -1,5 +1,13 @@
 # Backchannel Lab
 
+Assignment 2 adds streaming acoustic expression on top of the original backchannel engine. A separate bounded audio path shows energy, uncertainty and frustration cues while the user speaks. High-confidence frustration cues reduce acknowledgement frequency and avoid “go on”; the normal STT → LLM → TTS path never awaits acoustic work.
+
+- `python -m backchannel.acoustic_benchmark --repeats 5` reproduces nine audio-only scenarios in `results/acoustic.json`.
+- `python -m backchannel.acoustic_replay --repeats 2` compares real LiveKit response latency with acoustic processing OFF/ON.
+- The committed offline run measured inference P50 **0.30 ms**, P95 **0.66 ms**. True startup detection is at least **750 ms** of audio plus processing and transport.
+- With identical text, the frustration cue changed by **0.039** while the text baseline stayed identical. This small synthetic-fixture result is evidence of added audio information, not an accuracy claim.
+- [Acoustic system design](docs/acoustic-system-design.md) covers architecture, failure isolation, 1k/10k/100k capacity, overload, multi-tenancy, air-gapped deployment and rollout gates.
+
 An independent, cancellable listening-acknowledgement engine on **LiveKit Agents**, built for the Blue Machines SDE-1 assignment. Python owns the engine, voice worker, replay runner, metrics and web server. A small vanilla JavaScript dashboard compares paired runs and connects a microphone to LiveKit.
 
 **Current evidence:** real prerecorded audio has passed through LiveKit Cloud, Deepgram STT, OpenAI LLM and OpenAI TTS. The receiver observed both normal responses and independent acknowledgements. The local dashboard, 32 automated tests, eight WAV fixtures and 40 simulated pairs also work. See `results/analysis.md` for the paired measurements and limitations. No public live deployment is claimed; the web server and worker run locally.

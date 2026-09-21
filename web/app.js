@@ -1,6 +1,8 @@
 const $ = (id) => document.getElementById(id);
 const fmt = (n, unit = " ms") => (n == null ? "—" : `${n.toFixed(1)}${unit}`);
 let room, readyTimer;
+let expressionPoints = [];
+let timelineMarkers = [];
 function element(tag, text, cls) {
   const node = document.createElement(tag);
   if (text != null) node.textContent = text;
@@ -46,6 +48,48 @@ function resetLive(message) {
   $("orb").classList.remove("on");
   $("remoteAudio").replaceChildren();
 }
+function drawExpressionTimeline() {
+  const canvas = $("expressionTimeline");
+  const context = canvas.getContext("2d");
+  const width = canvas.width, height = canvas.height;
+  context.clearRect(0, 0, width, height);
+  context.font = "11px Segoe UI";
+  context.fillStyle = "#64767d";
+  context.fillText("last 20 seconds", 10, 16);
+  for (const [key, color, offset] of [["frustration", "#c65b50", 0], ["uncertainty", "#8774ba", 1], ["energy", "#147d73", 2]]) {
+    context.strokeStyle = color;
+    context.lineWidth = 2;
+    context.beginPath();
+    expressionPoints.forEach((point, index) => {
+      const x = 10 + (point.age / 20) * (width - 20);
+      const y = height - 20 - point[key] * (height - 42);
+      if (index === 0) context.moveTo(x, y); else context.lineTo(x, y);
+    });
+    context.stroke();
+    context.fillStyle = color;
+    context.fillText(key, 90 + offset * 120, 16);
+  }
+  context.fillStyle = "#1e3038";
+  timelineMarkers.forEach((marker) => {
+    const x = 10 + (marker.age / 20) * (width - 20);
+    context.fillRect(x, height - 12, 2, 8);
+    context.fillText(marker.label, Math.min(x + 3, width - 55), height - 4);
+  });
+}
+function updateExpression(event) {
+  for (const name of ["frustration", "uncertainty", "energy"]) {
+    $(name).value = event[name];
+    $(`${name}Value`).textContent = event[name].toFixed(2);
+  }
+  expressionPoints.push({ ...event, timestamp: performance.now() });
+  const now = performance.now();
+  expressionPoints = expressionPoints.filter((point) => now - point.timestamp <= 20000)
+    .map((point) => ({ ...point, age: 1 - (now - point.timestamp) / 20000 }));
+  timelineMarkers = timelineMarkers.filter((marker) => now - marker.timestamp <= 20000)
+    .map((marker) => ({ ...marker, age: 1 - (now - marker.timestamp) / 20000 }));
+  $("acousticMeta").textContent = `${event.audio_seconds.toFixed(2)}s window · ${event.inference_ms.toFixed(1)}ms inference · confidence ${event.confidence.toFixed(2)}`;
+  drawExpressionTimeline();
+}
 $("connect").onclick = async () => {
   let workerReady = false;
   $("connect").disabled = true;
@@ -59,7 +103,7 @@ $("connect").onclick = async () => {
         "Content-Type": "application/json",
         "X-Demo-Key": $("demoKey").value,
       },
-      body: JSON.stringify({ enabled: $("enabled").checked }),
+      body: JSON.stringify({ enabled: $("enabled").checked, acoustic_enabled: $("acousticEnabled").checked }),
     });
     const config = await response.json();
     if (!response.ok) throw new Error(config.detail || "Connection failed");
@@ -95,6 +139,12 @@ $("connect").onclick = async () => {
           clearTimeout(readyTimer);
           $("liveState").textContent = "The agent is listening";
           $("orb").classList.add("on");
+        }
+        if (event.kind === "acoustic_prediction") updateExpression(event);
+        const markerNames = { bc_audio_submitted: "ack", eot_detected: "EOT", tts_first_audio: "answer" };
+        if (markerNames[event.kind]) {
+          timelineMarkers.push({ label: markerNames[event.kind], timestamp: performance.now(), age: 1 });
+          drawExpressionTimeline();
         }
         if (event.kind === "agent_state")
           $("liveState").textContent = `Agent ${event.state}`;
@@ -137,20 +187,22 @@ $("disconnect").onclick = async () => {
   room = null;
   resetLive("Conversation ended");
 };
-$("enabled").onchange = async () => {
+async function sendModes() {
   if (room)
     try {
       await room.localParticipant.publishData(
         new TextEncoder().encode(
-          JSON.stringify({ enabled: $("enabled").checked }),
+          JSON.stringify({ enabled: $("enabled").checked, acoustic_enabled: $("acousticEnabled").checked }),
         ),
         { reliable: true, topic: "lab.control" },
       );
-      log(`Backchannels ${$("enabled").checked ? "enabled" : "disabled"}`);
+      log(`Backchannels ${$("enabled").checked ? "on" : "off"}; acoustics ${$("acousticEnabled").checked ? "on" : "off"}`);
     } catch (e) {
       log(`Mode change failed: ${e.message}`);
     }
-};
+}
+$("enabled").onchange = sendModes;
+$("acousticEnabled").onchange = sendModes;
 $("clearEvents").onclick = () => $("liveEvents").replaceChildren();
 fetch("/api/status")
   .then((r) => r.json())

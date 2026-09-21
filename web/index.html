@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Backchannel Lab · Blue Machines</title>
-    <link rel="stylesheet" href="/static/style.css?v=compact-2" />
+    <link rel="stylesheet" href="/static/style.css?v=acoustic-1" />
   </head>
   <body>
     <div class="shell">
@@ -24,12 +24,10 @@
         <section class="hero">
           <div>
             <div class="eyebrow teal">REAL-TIME CONVERSATION, MEASURED</div>
-            <h1>A little acknowledgement.<br />A measurable difference.</h1>
+            <h1>Listen beyond the words.<br />Without slowing the answer.</h1>
             <p>
-              Explore when an agent should say “mm-hmm” — and whether<br
-                class="desktop"
-              />
-              listening more naturally comes at the cost of response time.
+              See acoustic cues update while you speak, and how they guide<br class="desktop" />
+              short acknowledgements without entering the answer path.
             </p>
           </div>
           
@@ -41,17 +39,18 @@
         <section id="approach" aria-labelledby="approachTitle">
 <div class="section-head"><h2 id="approachTitle">How it works</h2></div>
 <div class="panel explain-card">
-<p>The agent plays a short “mm-hmm” while you speak. Its real answer uses a separate audio path and always has priority.</p>
+<p>The agent analyzes a rolling 1.5-second audio window every 250 ms. It shows acoustic cues for energy, uncertainty and frustration while you are still speaking. These are delivery signals, not claims about your true emotions.</p>
 <ul>
 <li><strong>When:</strong> after 2.4 seconds of speech and at least five recent words.</li>
 <li><strong>When to stop:</strong> when you pause, seem about to finish, or the agent needs to answer.</li>
-<li><strong>Keep it controlled:</strong> one acknowledgement task at a time, with a 4.5-second cooldown.</li>
+<li><strong>Use the signal:</strong> sustained frustration cues increase the acknowledgement cooldown and avoid “go on.”</li>
+<li><strong>Keep it safe:</strong> only the latest audio window is useful; stale work is dropped and failures never block the answer.</li>
 </ul>
 <p>We use a saved audio clip to avoid a speech-generation delay. It never becomes part of the AI’s conversation history. The trade-off is a repeated voice clip and simple pause detection.</p>
 </div>
 <div class="section-head"><h2>How we check it</h2></div>
 <div class="panel explain-card">
-<p>Eight recordings are replayed with acknowledgements on and off. We compare response delay, acknowledgement delay, cancellations and badly timed audio. Tests cover stopping, interruptions, slow providers and shutdown.</p>
+<p>Repeatable scenarios compare the same words with different delivery, acoustic processing on/off, slow inference, noise and failures. The timeline keeps acoustic predictions beside speech, acknowledgements, end-of-turn and the normal answer.</p>
 <p><strong>Limit:</strong> the full benchmark was recorded before the Windows audio fix. It needs a fresh run. Better naturalness and no added delay are not yet proven.</p>
 <p><a class="text-link" href="https://github.com/AnanteshG/livekit-backchannel/blob/main/results/analysis.md" target="_blank" rel="noreferrer">Results</a> · <a class="text-link" href="https://github.com/AnanteshG/livekit-backchannel#readme" target="_blank" rel="noreferrer">Full explanation</a></p>
 </div>
@@ -77,6 +76,9 @@
               <label class="toggle"
                 ><input id="enabled" type="checkbox" checked /> Backchannel
                 acknowledgements</label
+              ><label class="toggle"
+                ><input id="acousticEnabled" type="checkbox" checked /> Acoustic
+                expression</label
               ><label class="key-label"
                 >Demo access key, if required<input
                   id="demoKey"
@@ -91,6 +93,17 @@
               </div>
               <p class="footnote" id="availability"></p>
               <div id="remoteAudio"></div>
+            </div>
+            <div class="panel acoustic-card">
+              <div class="panel-head"><h3>Acoustic expression</h3><span class="footnote">live</span></div>
+              <p class="footnote">Audio-only conversational cues. Not an emotion diagnosis.</p>
+              <div class="signal-grid">
+                <div><span>Frustration cue</span><strong id="frustrationValue">—</strong><meter id="frustration" min="0" max="1" value="0"></meter></div>
+                <div><span>Uncertainty cue</span><strong id="uncertaintyValue">—</strong><meter id="uncertainty" min="0" max="1" value="0"></meter></div>
+                <div><span>Energy</span><strong id="energyValue">—</strong><meter id="energy" min="0" max="1" value="0"></meter></div>
+              </div>
+              <canvas id="expressionTimeline" width="700" height="210" aria-label="Expression timeline"></canvas>
+              <p class="footnote" id="acousticMeta">Waiting for enough audio…</p>
             </div>
             <div class="panel">
               <div class="panel-head">
@@ -114,6 +127,6 @@
       </main>
     </div>
     <script src="/static/vendor/livekit-client.umd.min.js"></script>
-    <script src="/static/app.js?v=compact-2"></script>
+    <script src="/static/app.js?v=acoustic-1"></script>
   </body>
 </html>
