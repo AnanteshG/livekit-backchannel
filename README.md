@@ -1,5 +1,7 @@
 # Backchannel Lab
 
+Live voice cues also reach the response model: at turn completion the worker snapshots the latest acoustic prediction and adds a temporary system note to a copy of the LLM context. Confidence below 0.45, signals older than 10 seconds, and disabled acoustics are ignored. Strong frustration selects a calm, direct reply; uncertainty selects a patient clarification; high energy selects an engaged tone. These are tentative delivery hints and the user's words take priority. The note is used for one response and does not accumulate in conversation history. Look for **Voice cues sent to agent** in Conversation activity to verify delivery. This response adaptation was added after the committed acoustic benchmark, so those results do not measure the extra prompt context.
+
 Assignment 2 adds streaming acoustic expression on top of the original backchannel engine. A separate bounded audio path shows energy, uncertainty and frustration cues while the user speaks. High-confidence frustration cues reduce acknowledgement frequency and avoid “go on”; the normal STT → LLM → TTS path never awaits acoustic work.
 
 - `python -m backchannel.acoustic_benchmark --repeats 5` reproduces nine audio-only scenarios in `results/acoustic.json`.

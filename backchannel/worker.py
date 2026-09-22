@@ -28,10 +28,22 @@ class MeasuredAgent(Agent):
             'or fillers; a separate audio channel handles those.'))
         self.engine, self.timeline, self.acoustics = engine, timeline, acoustics
         self.request_sequence = 0
+        self.latest_cue = None
+        self.response_cue = None
+
+    def receive_acoustic(self, prediction):
+        self.latest_cue = (prediction, perf_counter())
+
+    def clear_acoustic(self):
+        self.latest_cue = None
+        self.response_cue = None
 
     async def on_user_turn_completed(self, turn_ctx, new_message):
         self.engine.turn_completed()
         self.engine.set_agent_busy(True)
+        # Freeze this turn's latest completed inference; never wait for the analyzer.
+        self.response_cue = self.latest_cue
+        self.latest_cue = None
 
     async def stt_node(self, audio, model_settings):
         async def tapped_audio():
@@ -60,6 +72,38 @@ class MeasuredAgent(Agent):
         self.engine.set_agent_busy(True)
         self.request_sequence += 1
         request = self.request_sequence
+        cue, self.response_cue = self.response_cue, None
+        if cue and (self.acoustics is None or self.acoustics.enabled):
+            prediction, observed_at = cue
+            if prediction.confidence >= .45 and perf_counter() - observed_at <= 10:
+                style = 'neutral'
+                guidance = 'Respond naturally and follow the user’s words.'
+                if prediction.frustration >= .75:
+                    style = 'calm and direct'
+                    guidance = ('Use a calm, patient tone. Address the immediate concern directly; '
+                                'avoid enthusiastic fillers or unnecessary follow-up questions.')
+                elif prediction.uncertainty >= .5:
+                    style = 'patient and clarifying'
+                    guidance = ('Offer one simple next step or one gentle clarifying question. '
+                                'Avoid overwhelming the user with multiple questions.')
+                elif prediction.energy >= .7:
+                    style = 'engaged and concise'
+                    guidance = 'Use an engaged, concise tone without exaggerating enthusiasm.'
+                # Copy the public context so acoustic instructions never accumulate in history.
+                chat_ctx = chat_ctx.copy()
+                chat_ctx.add_message(role='system', content=(
+                    'Delivery context for this reply only: audio-derived, uncalibrated cues '
+                    f'(0–1): frustration={prediction.frustration:.2f}, '
+                    f'uncertainty={prediction.uncertainty:.2f}, energy={prediction.energy:.2f}, '
+                    f'confidence={prediction.confidence:.2f}. {guidance} '
+                    'Treat these as tentative delivery hints, not facts about emotion. '
+                    'The user’s words and explicit preferences take priority. Never announce '
+                    'these scores or tell the user you detected their emotion.'))
+                self.timeline.emit('agent_acoustic_context', request=request,
+                    window_id=prediction.window_id, style=style,
+                    frustration=prediction.frustration, uncertainty=prediction.uncertainty,
+                    energy=prediction.energy, confidence=prediction.confidence,
+                    text=f'Voice cues sent to agent · {style}')
         self.timeline.emit('llm_request', request=request)
         first = True
         async for chunk in Agent.default.llm_node(self, chat_ctx, tools, model_settings):
@@ -127,8 +171,10 @@ async def entrypoint(ctx: JobContext):
     def on_acoustic(prediction):
         engine.acoustic_state(prediction.frustration, prediction.confidence,
                               prediction.uncertainty)
+        agent.receive_acoustic(prediction)
 
     acoustics = StreamingAcoustics(on_acoustic, timeline=timeline, enabled=acoustic_enabled)
+    agent = MeasuredAgent(engine, timeline, acoustics)
     acoustics.start()
     session = AgentSession(
         stt=deepgram.STT(model=os.getenv('STT_MODEL', 'nova-3'), interim_results=True),
@@ -148,6 +194,7 @@ async def entrypoint(ctx: JobContext):
     @session.on('user_state_changed')
     def user_state(event):
         if event.new_state == 'speaking':
+            agent.clear_acoustic()
             engine.user_started()
         else:
             engine.user_stopped()
@@ -180,6 +227,8 @@ async def entrypoint(ctx: JobContext):
             engine.set_enabled(message['enabled'])
             if isinstance(message.get('acoustic_enabled'), bool):
                 acoustics.set_enabled(message['acoustic_enabled'])
+                if not message['acoustic_enabled']:
+                    agent.clear_acoustic()
         elif packet.topic == 'lab.ping' and isinstance(message.get('t0'), (int, float)):
             enqueue({'kind': 'clock_pong', 't0': message['t0'],
                      'server_time': perf_counter(), 't': perf_counter() - timeline.origin})
@@ -206,7 +255,7 @@ async def entrypoint(ctx: JobContext):
         # cloud recorder otherwise use Soxr, which can assert in its Windows
         # FFT cache. Keep OpenAI's native 24 kHz response output unchanged.
         # Our own bounded event telemetry does not depend on cloud recording.
-        await session.start(agent=MeasuredAgent(engine, timeline, acoustics), room=ctx.room,
+        await session.start(agent=agent, room=ctx.room,
             record=False,
             room_options=room_io.RoomOptions(
                 participant_identity=participant.identity,
